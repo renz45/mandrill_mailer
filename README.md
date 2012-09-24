@@ -46,7 +46,7 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
  end
  ```
 
- * `#default:`
+* `#default:`
   * `:from` - set the default from email address for the mailer
 
 * `.mandrill_mail`

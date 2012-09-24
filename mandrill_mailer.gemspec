@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Adam Rensel"]
   s.email       = ["adamrensel@codeschool.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/renz45/mandrill_mailer"
   s.summary     = %q{Transactional Mailer for Mandrill}
   s.description = %q{Transactional Mailer for Mandrill}
 

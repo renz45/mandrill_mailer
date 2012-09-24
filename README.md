@@ -3,6 +3,7 @@ MandrilMailer class for sending transactional emails through mandril.
 Only template based emails are supported at this time.
 
 ## Usage
+Add `gem 'mailchimp'`
 Add `gem 'mandrill_mailer'` to your Gemfile
 
 Add this to your `mail.rb` in initializers:

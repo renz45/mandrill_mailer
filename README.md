@@ -22,6 +22,11 @@ MandrillMailer.api_key = ENV['MANDRILL_API_KEY']
 
 Don't forget to setup your ENV variables on your server
 
+You will also need to set default_url_options for the mailer, similar to action mailer
+in your environment config files:
+
+`MandrillMailer::TransactionalMailer.default_url_options = { :host => 'localhost' }`
+
 ## Creating a new mailer
 Creating a new Mandrill Mailer is similar to a normal Rails mailer:
 

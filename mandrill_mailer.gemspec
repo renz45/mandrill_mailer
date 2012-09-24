@@ -4,7 +4,7 @@ require "mandrill_mailer/version"
 
 Gem::Specification.new do |s|
   s.name        = "mandrill_mailer"
-  s.version     = ::VERSION
+  s.version     = MandrillMailer::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Adam Rensel"]
   s.email       = ["adamrensel@codeschool.com"]

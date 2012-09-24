@@ -99,7 +99,7 @@ The test for this particular Mailer is setup like so:
 
 ```
 test_setup_for :invite do |mailer, options|
-    invitation = OpenStruct.new({
+    invitation = MandrillMailer::Mock.new({
       email: options[:email],
       owner_name: 'foobar',
       secret: rand(9000000..1000000).to_s
@@ -108,9 +108,22 @@ test_setup_for :invite do |mailer, options|
 end
 ```
 
+Use MandrillMailer::Mock to mock out objects.
+
+If in order to represent a url within a mock, make sure there is a `url` or `path` attribute,
+for example, if I had a course mock and I was using the `course_url` route helper within the mailer
+I would create the mock like so:
+
+```
+course = MandrillMailer::Mock.new({
+  title: 'zombies',
+  type: 'Ruby',
+  url: 'http://funzone.com/zombies'
+})
+```
+
+This would ensure that `course_url(course)` works as expected.
+
 The mailer and options passed to the `.test` method are yielded to the block.
 
 The `:email` option is the only required option, make sure to add at least this to your test object.
-
-## Helper Methods
-* `.test_friendly_url`(object, route helper as a symbol) - This helper is used for using route helpers, but still staying compatible with using OpenStructs for stubing out the mailing test objects (there is probably a much better way of doing this)

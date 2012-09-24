@@ -229,28 +229,6 @@ module MandrillMailer
 
     protected
 
-    # Public: Url helper for creating OpenStruct compatible urls
-    #         This is used for making sure urls will still work with
-    #         OpenStructs used in the email testing code
-    #
-    #         OpenStruct should have a .url property to work with this
-    #
-    # object - Object that would normally be passed into the route helper
-    # route_helper - The route helper as a symbol needed for the url
-    #
-    # Examples
-    #
-    # 'VIDEO_URL' => open_struct_url(video, :code_tv_video_url)
-    #
-    # Returns the url as a string
-    def test_friendly_url(object, route_helper)
-      if object.kind_of? OpenStruct
-        object.url
-      else
-        method(route_helper).call(object)
-      end
-    end
-
     # Makes this class act as a singleton without it actually being a singleton
     # This keeps the syntax the same as the orginal mailers so we can swap quickly if something
     # goes wrong.
@@ -263,10 +241,22 @@ module MandrillMailer
       super || instance_methods.include?(method)
     end
 
-    # Proxy route helpers to rails if Rails exists
+    # Proxy route helpers to rails if Rails exists. Doing routes this way
+    # makes it so this gem doesn't need to be a rails engine
     def method_missing(method, *args)
       return super unless defined?(Rails) && Rails.application.routes.url_helpers.respond_to?(method)
-      Rails.application.routes.url_helpers.method(method).call(*args, host: @@url_host)
+      # Check to see if one of the args is an open struct. If it is, we'll assume it's the
+      # test stub and try to call a path or url attribute.
+      if args.any? {|arg| arg.kind_of?(MandrillMailer::Mock)}
+        # take the first OpenStruct found in args and look for .url or.path
+        args.each do |arg|
+          if arg.kind_of?(MandrillMailer::Mock)
+            break arg.url || arg.path
+          end
+        end
+      else
+        Rails.application.routes.url_helpers.method(method).call(*args, host: @@url_host)
+      end
     end
 
     def image_path(image)

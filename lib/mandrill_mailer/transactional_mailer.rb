@@ -156,49 +156,6 @@ module MandrillMailer
       mandrill.messages_send_template(@data)
     end
 
-    protected
-
-    # Public: Url helper for creating OpenStruct compatible urls
-    #         This is used for making sure urls will still work with
-    #         OpenStructs used in the email testing code
-    #
-    #         OpenStruct should have a .url property to work with this
-    #
-    # object - Object that would normally be passed into the route helper
-    # route_helper - The route helper as a symbol needed for the url
-    #
-    # Examples
-    #
-    # 'VIDEO_URL' => open_struct_url(video, :code_tv_video_url)
-    #
-    # Returns the url as a string
-    def test_friendly_url(object, route_helper)
-      if object.kind_of? OpenStruct
-        object.url
-      else
-        method(route_helper).call(object)
-      end
-    end
-
-    # Makes this class act as a singleton without it actually being a singleton
-    # This keeps the syntax the same as the orginal mailers so we can swap quickly if something
-    # goes wrong.
-    def self.method_missing(method, *args)
-      return super unless respond_to?(method)
-      new.method(method).call(*args)
-    end
-
-    # Proxy route helpers to rails if Rails exists
-    def method_missing(method, *args)
-
-      return super unless defined?(Rails) && Rails.application.routes.url_helpers.respond_to?(method)
-      Rails.application.routes.url_helpers.method(method).call(*args, host: @@url_host)
-    end
-
-    def self.respond_to?(method, include_private = false)
-      super || instance_methods.include?(method)
-    end
-
     # Public: Build the hash needed to send to the mandrill api
     #
     # args - The Hash options used to refine the selection:
@@ -268,6 +225,48 @@ module MandrillMailer
 
     def data
       @data
+    end
+
+    protected
+
+    # Public: Url helper for creating OpenStruct compatible urls
+    #         This is used for making sure urls will still work with
+    #         OpenStructs used in the email testing code
+    #
+    #         OpenStruct should have a .url property to work with this
+    #
+    # object - Object that would normally be passed into the route helper
+    # route_helper - The route helper as a symbol needed for the url
+    #
+    # Examples
+    #
+    # 'VIDEO_URL' => open_struct_url(video, :code_tv_video_url)
+    #
+    # Returns the url as a string
+    def test_friendly_url(object, route_helper)
+      if object.kind_of? OpenStruct
+        object.url
+      else
+        method(route_helper).call(object)
+      end
+    end
+
+    # Makes this class act as a singleton without it actually being a singleton
+    # This keeps the syntax the same as the orginal mailers so we can swap quickly if something
+    # goes wrong.
+    def self.method_missing(method, *args)
+      return super unless respond_to?(method)
+      new.method(method).call(*args)
+    end
+
+    def self.respond_to?(method, include_private = false)
+      super || instance_methods.include?(method)
+    end
+
+    # Proxy route helpers to rails if Rails exists
+    def method_missing(method, *args)
+      return super unless defined?(Rails) && Rails.application.routes.url_helpers.respond_to?(method)
+      Rails.application.routes.url_helpers.method(method).call(*args, host: @@url_host)
     end
 
     def image_path(image)

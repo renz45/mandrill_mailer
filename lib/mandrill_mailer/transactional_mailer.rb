@@ -125,17 +125,6 @@ module MandrillMailer
 
     end
 
-    # Public: this enables the api key to be set in an initializer
-    #         ex. MandrillMailer.api_key = ENV[MANDRILL_API_KEY]
-    #
-    # key - Api key for the Mandrill api
-    #
-    #
-    # Returns the key(String)
-    def self.api_key=(key)
-      @@api_key = key
-    end
-
     def default_url_options=(options={})
       @@url_host = options[:host]
     end
@@ -292,7 +281,7 @@ module MandrillMailer
     end
 
     def api_key
-      @@api_key || ''
+      MandrillMailer::Config.api_key
     end
   end
 end

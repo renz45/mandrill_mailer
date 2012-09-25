@@ -17,7 +17,7 @@ ActionMailer::Base.smtp_settings = {
     :domain    => 'heroku.com'
   }
 ActionMailer::Base.delivery_method = :smtp
-MandrillMailer.api_key = ENV['MANDRILL_API_KEY']
+MandrillMailer::Config.api_key = ENV['MANDRILL_API_KEY']
 ```
 
 Don't forget to setup your ENV variables on your server

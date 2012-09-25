@@ -17,5 +17,13 @@ module MandrillMailer
     def self.api_key
       @@api_key || ''
     end
+
+    def self.default_url_options=(options={})
+      @@url_options = options
+    end
+
+    def self.default_url_options
+      @@url_options || {}
+    end
   end
 end

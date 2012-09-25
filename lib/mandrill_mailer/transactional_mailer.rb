@@ -125,10 +125,6 @@ module MandrillMailer
 
     end
 
-    def default_url_options=(options={})
-      @@url_host = options[:host]
-    end
-
     # Public: Triggers the stored Mandril params to be sent to the Mandrill api
     #
     # text - The String to be duplicated.
@@ -244,7 +240,7 @@ module MandrillMailer
           end
         end
       else
-        Rails.application.routes.url_helpers.method(method).call(*args, host: @@url_host)
+        Rails.application.routes.url_helpers.method(method).call(*args, host: MandrillMailer::Config.default_url_options[:host])
       end
     end
 

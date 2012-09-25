@@ -25,13 +25,13 @@ Don't forget to setup your ENV variables on your server
 You will also need to set default_url_options for the mailer, similar to action mailer
 in your environment config files:
 
-`MandrillMailer::TransactionalMailer.default_url_options = { :host => 'localhost' }`
+`MandrillMailer::Config.default_url_options = { :host => 'localhost' }`
 
 ## Creating a new mailer
 Creating a new Mandrill Mailer is similar to a normal Rails mailer:
 
 ```
- class InvitationMailer < MandrillMailer
+ class InvitationMailer < MandrillMailer::TransactionalMailer
    default from: 'support@example.com'
 
    def invite(invitation)
@@ -91,7 +91,7 @@ You can send the email by using the familiar syntax:
 `InvitationMailer.invite(invitation).deliver`
    
 ## Creating a test method
-When switching over to Mandrill for transactional emails we found that it was hard to setup a mailer in the console to send test emails easily (those darn designers), but really, you don't want to have to setup test objects everytime you want to send a test email. You can set up a testing 'stub' once and then call the `.test` method to send the test email.
+When switching over to Mandrill for transactional emails we found that it was hard to setup a mailer in the console to send test emails easily (those darn designers), but really, you don't want to have to setup test objects everytime you want to send a test email. You can set up a testing 'mock' once and then call the `.test` method to send the test email.
 
 You can test the above email by typing: `InvitationMailer.test(:invite, email:<your email>)` into the Rails Console.
 

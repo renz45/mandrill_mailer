@@ -37,7 +37,7 @@ in your environment config files:
 Creating a new Mandrill Mailer is similar to a normal Rails mailer:
 
 ```
- class InvitationMailer < MandrillMailer::TransactionalMailer
+ class InvitationMailer < MandrillMailer::TemplateMailer
    default from: 'support@example.com'
 
    def invite(invitation)

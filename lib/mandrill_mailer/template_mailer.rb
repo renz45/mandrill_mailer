@@ -57,7 +57,7 @@
 #   from address will be used instead.
 
 module MandrillMailer
-  class TransactionalMailer
+  class TemplateMailer
     # include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
 

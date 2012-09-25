@@ -1,15 +1,15 @@
 require "spec_helper"
 
-describe MandrillMailer::TransactionalMailer do
+describe MandrillMailer::TemplateMailer do
   let(:image_path) { '/assets/image.jpg' }
   let(:default_host) { 'localhost:3000' }
   let(:mailer) {described_class.new}
   let(:api_key) { '1237861278' }
 
   before do
-    MandrillMailer::TransactionalMailer.api_key = api_key
-    MandrillMailer::TransactionalMailer.default_url_options = { host: default_host }
-    MandrillMailer::TransactionalMailer.any_instance.stub(:image_path).and_return(image_path)
+    MandrillMailer.config.api_key = api_key
+    MandrillMailer.config.default_url_options = { host: default_host }
+    MandrillMailer.config.any_instance.stub(:image_path).and_return(image_path)
   end
 
   # this only works from within a Rails application
@@ -98,7 +98,7 @@ describe MandrillMailer::TransactionalMailer do
     subject { mailer.mandrill_mail(data) }
 
     before do
-      MandrillMailer::TransactionalMailer.default from: from_email
+      MandrillMailer::TemplateMailer.default from: from_email
     end
 
     it 'should return the current class instance' do
@@ -106,7 +106,7 @@ describe MandrillMailer::TransactionalMailer do
     end
 
     it 'should produce the correct data' do
-      mail = MandrillMailer::TransactionalMailer.new().mandrill_mail(data)
+      mail = MandrillMailer::TemplateMailer.new().mandrill_mail(data)
       mail.data.should eq ({"key" => api_key, 
         "template_name" => data[:template],
         "template_content" => [{'name' => template_content_name, 'content' => template_content_content}],

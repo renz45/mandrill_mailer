@@ -6,7 +6,10 @@ Only template based emails are supported at this time.
 Add `gem 'mailchimp'`
 Add `gem 'mandrill_mailer'` to your Gemfile
 
-Add this to your `mail.rb` in initializers:
+Add this to your `mail.rb` in initializers.
+You don't need to add the ActionMailer stuff unless your still using ActionMailer emails.
+This just plugs into the Mandrill smtp servers. If your doing template based emails
+through the Mandrill api you really only need the `MandrillMailer.configure` part
 
 ```
 ActionMailer::Base.smtp_settings = {

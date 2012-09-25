@@ -240,7 +240,7 @@ module MandrillMailer
           end
         end
       else
-        Rails.application.routes.url_helpers.method(method).call(*args, host: MandrillMailer::Config.default_url_options[:host])
+        Rails.application.routes.url_helpers.method(method).call(*args, host: MandrillMailer.config.default_url_options[:host])
       end
     end
 
@@ -277,7 +277,7 @@ module MandrillMailer
     end
 
     def api_key
-      MandrillMailer::Config.api_key
+      MandrillMailer.config.api_key
     end
   end
 end

@@ -6,7 +6,11 @@ require 'mandrill_mailer/version'
 
 module MandrillMailer
   def self.configure(&block)
-    block.call(MandrillMailer::Railtie.config.mandrill_mailer)
+    if block_given?
+      block.call(MandrillMailer::Railtie.config.mandrill_mailer)
+    else
+      MandrillMailer::Railtie.config.mandrill_mailer
+    end
   end
 
   def self.config

@@ -133,3 +133,6 @@ This would ensure that `course_url(course)` works as expected.
 The mailer and options passed to the `.test` method are yielded to the block.
 
 The `:email` option is the only required option, make sure to add at least this to your test object.
+
+## TODO
+Either get rid of the mailchimp gem dependancy or hook into actionmailer like the mailchimp does to send normal emails.

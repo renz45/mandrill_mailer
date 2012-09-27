@@ -61,6 +61,10 @@ module MandrillMailer
     # include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
 
+
+    class InvalidEmail < StandardError; end
+    class InvalidMailerMethod < StandardError; end
+
     # Public: Defaults for the mailer. Currently the only option is from:
     #
     # options - The Hash options used to refine the selection (default: {}):
@@ -114,13 +118,13 @@ module MandrillMailer
     # Returns the duplicated String.
     def self.test(mailer_method, options={})
       unless options[:email]
-        raise Exception 'Please specify a :email option(email to send the test to)'
+        raise InvalidEmail.new 'Please specify a :email option(email to send the test to)'
       end
 
       if @@mailer_methods[mailer_method]
         @@mailer_methods[mailer_method].call(self.new, options)
       else
-        raise Exception "The mailer method: #{mailer_method} does not have test setup"
+        raise InvalidMailerMethod.new "The mailer method: #{mailer_method} does not have test setup"
       end
 
     end
@@ -240,7 +244,8 @@ module MandrillMailer
           end
         end
       else
-        Rails.application.routes.url_helpers.method(method).call(*args, host: MandrillMailer.config.default_url_options[:host])
+        options = args.extract_options!.merge({host: MandrillMailer.config.default_url_options[:host]})
+        Rails.application.routes.url_helpers.method(method).call(options)
       end
     end
 

@@ -245,7 +245,8 @@ module MandrillMailer
         end
       else
         options = args.extract_options!.merge({host: MandrillMailer.config.default_url_options[:host]})
-        Rails.application.routes.url_helpers.method(method).call(options)
+        args << options
+        Rails.application.routes.url_helpers.method(method).call(*args)
       end
     end
 

@@ -1,9 +1,10 @@
 PATH
   remote: .
   specs:
-    mandrill_mailer (0.0.2)
+    mandrill_mailer (0.1.10)
       actionpack
       activesupport
+      mailchimp (= 0.0.7.alpha)
 
 GEM
   remote: http://rubygems.org/
@@ -29,10 +30,16 @@ GEM
     diff-lcs (1.1.3)
     erubis (2.7.0)
     hike (1.2.1)
+    httparty (0.9.0)
+      multi_json (~> 1.0)
+      multi_xml
     i18n (0.6.1)
     journey (1.0.4)
+    mailchimp (0.0.7.alpha)
+      httparty
     method_source (0.8)
     multi_json (1.3.6)
+    multi_xml (0.5.1)
     pry (0.9.10)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -40,7 +47,7 @@ GEM
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-test (0.6.1)
+    rack-test (0.6.2)
       rack (>= 1.0)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)

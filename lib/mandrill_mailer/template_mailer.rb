@@ -278,7 +278,7 @@ module MandrillMailer
 
     # single to params item
     def to_params_item(item)
-      return {"email" => item, "name" => "Code School Customer"} unless item.kind_of? Hash
+      return {"email" => item, "name" => "item"} unless item.kind_of? Hash
       item
     end
 

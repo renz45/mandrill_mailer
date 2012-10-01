@@ -35,13 +35,12 @@ describe MandrillMailer::TemplateMailer do
   describe '#format_to_params' do
     let(:email) { 'bob@email.com' }
     let(:name) { 'bob' }
-    let(:default_name) { 'Code School Customer' }
 
     context 'with a single email string' do
       subject { mailer.send(:format_to_params, email) }
 
       it 'should format args to a format mandrill likes' do
-        should eq [{"email" => email, "name" => default_name}] 
+        should eq [{"email" => email, "name" => email}] 
       end
     end
 
@@ -49,7 +48,7 @@ describe MandrillMailer::TemplateMailer do
       subject { mailer.send(:format_to_params, [email]) }
 
       it 'should format args to a format mandrill likes' do
-        should eq [{"email" => email, "name" => default_name}] 
+        should eq [{"email" => email, "name" => email}] 
       end
     end
 

@@ -92,7 +92,9 @@ describe MandrillMailer::TemplateMailer do
         bcc: 'email@email.com',
         tags: ['tag1'],
         google_analytics_domains: ["http://site.com"],
-        google_analytics_campaign: '1237423474'
+        google_analytics_campaign: '1237423474',
+        # metadata: [],
+        attachments: []
       }
     end
     subject { mailer.mandrill_mail(data) }
@@ -124,7 +126,9 @@ describe MandrillMailer::TemplateMailer do
           "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
           "tags" => data[:tags],
           "google_analytics_domains" => data[:google_analytics_domains],
-          "google_analytics_campaign" => data[:google_analytics_campaign]
+          "google_analytics_campaign" => data[:google_analytics_campaign],
+          # metadata: data[:metadata],
+          attachments: data[:attachments]
         }
       })
     end

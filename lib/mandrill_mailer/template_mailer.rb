@@ -201,10 +201,8 @@ module MandrillMailer
           "tags" => args[:tags],
           "google_analytics_domains" => args[:google_analytics_domains],
           "google_analytics_campaign" => args[:google_analytics_campaign]
-          # "metadata" =>["..."],
-          # "attachments" =>[
-          #   {"type" => "example type", "name" => "example name", "content" => "example content"}
-          # ]
+          # "metadata" => args[:metadata],
+          "attachments" => args[:attachments]
         }
       }
 

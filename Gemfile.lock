@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mandrill_mailer (0.0.2)
+    mandrill_mailer (0.1.10)
       actionpack
       activesupport
 
@@ -40,7 +40,7 @@ GEM
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-test (0.6.1)
+    rack-test (0.6.2)
       rack (>= 1.0)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)

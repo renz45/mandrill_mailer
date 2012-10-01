@@ -19,6 +19,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activesupport'
   s.add_dependency 'actionpack'
+  s.add_dependency 'mailchimp', '0.0.7.alpha'
+
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rspec'
+
 end

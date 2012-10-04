@@ -152,7 +152,6 @@ describe MandrillMailer::TemplateMailer do
     end
   end
 
-  # This describe should always stay at the bottom of this
   describe 'url helpers in mailer' do
     subject { mailer.send(:course_url) }
 

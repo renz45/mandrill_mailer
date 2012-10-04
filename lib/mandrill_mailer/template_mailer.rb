@@ -251,7 +251,11 @@ module MandrillMailer
     end
 
     def image_path(image)
-      ActionController::Base.helpers.asset_path(image)
+      if defined? Rails
+        ActionController::Base.helpers.asset_path(image)
+      else
+        method_missing(:image_path, image)
+      end
     end
 
     def image_url(image)

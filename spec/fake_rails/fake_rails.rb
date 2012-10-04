@@ -49,9 +49,9 @@ class Rails
     end
 
     def method_missing(method, *args)
-      define_singleton_method(method) do |method_args={}|
+      define_singleton_method(method) do |*method_args|
         internal_args = args || ['']
-        "http://#{method_args[:host]}#{internal_args.first}"
+        "http://#{method_args.extract_options![:host]}#{internal_args.first}"
       end
     end
   end

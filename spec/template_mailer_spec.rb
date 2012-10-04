@@ -179,6 +179,12 @@ describe MandrillMailer::TemplateMailer do
       it 'should return the correct route' do
         subject.should eq router.course_url(host: host)
       end
+
+      context 'route helper with an argument' do
+        it 'should return the correct route' do
+          subject.should eq router.course_url({id: 1, title: 'zombies'}, host: host)
+        end
+      end
     end
 
     context 'Rails is not defined' do

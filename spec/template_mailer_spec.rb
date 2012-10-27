@@ -3,7 +3,7 @@ require "spec_helper"
 describe MandrillMailer::TemplateMailer do
   let(:image_path) { '/assets/image.jpg' }
   let(:default_host) { 'localhost:3000' }
-  let(:mailer) {described_class.new}
+  let(:mailer) { described_class.new }
   let(:api_key) { '1237861278' }
 
   before do
@@ -101,7 +101,7 @@ describe MandrillMailer::TemplateMailer do
     let(:to_email) { 'bob@email.com' }
     let(:to_name) { 'bob' }
 
-    let(:data) do
+    let(:args) do
       {
         template: 'Email Template',
         subject: "super secret",
@@ -117,7 +117,8 @@ describe MandrillMailer::TemplateMailer do
         google_analytics_campaign: '1237423474'
       }
     end
-    subject { mailer.mandrill_mail(data) }
+
+    subject { mailer.mandrill_mail(args) }
 
     before do
       MandrillMailer::TemplateMailer.default from: from_email
@@ -127,27 +128,30 @@ describe MandrillMailer::TemplateMailer do
       should eq mailer
     end
 
-    it 'should produce the correct data' do
-      mail = MandrillMailer::TemplateMailer.new().mandrill_mail(data)
-      mail.data.should eq ({"key" => api_key, 
-        "template_name" => data[:template],
-        "template_content" => [{'name' => template_content_name, 'content' => template_content_content}],
-        "message" => {
-          "subject" => data[:subject], 
-          "from_email" => from_email, 
-          "from_name" => from_email, 
-          "to" => [{'email' => to_email, 'name' => to_name}],
-          "headers" => data[:headers],
-          "track_opens" => true,
-          "track_clicks" => true,
-          "auto_text" => true,
-          "url_strip_qs" => true,
-          "bcc_address" => data[:bcc], 
-          "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
-          "tags" => data[:tags],
-          "google_analytics_domains" => data[:google_analytics_domains],
-          "google_analytics_campaign" => data[:google_analytics_campaign]
-        }
+    it 'should set the template name' do
+      subject.template_name.should eq 'Email Template'
+    end
+
+    it 'should set the template content' do
+      subject.template_content.should eq [{'name' => template_content_name, 'content' => template_content_content}]
+    end
+
+    it 'should produce the correct message' do
+      subject.message.should eq ({
+        "subject" => args[:subject],
+        "from_email" => from_email,
+        "from_name" => from_email,
+        "to" => [{'email' => to_email, 'name' => to_name}],
+        "headers" => args[:headers],
+        "track_opens" => true,
+        "track_clicks" => true,
+        "auto_text" => true,
+        "url_strip_qs" => true,
+        "bcc_address" => args[:bcc],
+        "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
+        "tags" => args[:tags],
+        "google_analytics_domains" => args[:google_analytics_domains],
+        "google_analytics_campaign" => args[:google_analytics_campaign]
       })
     end
   end

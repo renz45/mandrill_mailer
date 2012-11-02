@@ -224,6 +224,16 @@ module MandrillMailer
       return self
     end
 
+    # Public: Data hash (deprecated)
+    def data
+      {
+        "key" => api_key,
+        "template_name" => template_name,
+        "template_content" => template_content,
+        "message" => message
+      }
+    end
+
     protected
 
     # Makes this class act as a singleton without it actually being a singleton

@@ -154,6 +154,15 @@ describe MandrillMailer::TemplateMailer do
         "google_analytics_campaign" => args[:google_analytics_campaign]
       })
     end
+
+    it 'should retain data method' do
+      subject.data.should eq({
+        "key" => MandrillMailer.config.api_key,
+        "template_name" => subject.template_name,
+        "template_content" => subject.template_content,
+        "message" => subject.message,
+      })
+    end
   end
 
   describe 'url helpers in mailer' do

@@ -5,6 +5,8 @@ require 'mandrill_mailer/template_mailer'
 require 'mandrill_mailer/version'
 
 module MandrillMailer
+  autoload :Mandrill, 'mandrill'
+
   if defined?(Rails)
     def self.configure(&block)
       if block_given?

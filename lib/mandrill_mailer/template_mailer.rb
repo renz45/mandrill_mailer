@@ -129,6 +129,15 @@ module MandrillMailer
 
     end
 
+    # Public: The name of the template to use
+    attr_accessor :template_name
+
+    # Public: Template content
+    attr_accessor :template_content
+
+    # Public: Other information on the message to send
+    attr_accessor :message
+
     # Public: Triggers the stored Mandril params to be sent to the Mandrill api
     #
     # text - The String to be duplicated.
@@ -141,8 +150,8 @@ module MandrillMailer
     #
     # Returns the duplicated String.
     def deliver
-      mandrill = Mailchimp::Mandrill.new(api_key)
-      mandrill.messages_send_template(@data)
+      mandrill = Mandrill::API.new(api_key)
+      mandrill.messages.send_template(template_name, template_content, message)
     end
 
     # Public: Build the hash needed to send to the mandrill api
@@ -176,44 +185,53 @@ module MandrillMailer
       # format the :to param to what Mandrill expects if a string or array is passed
       args[:to] = format_to_params(args[:to])
 
-      @data = {"key" => api_key,
-        "template_name" => args[:template],
-        "template_content" => mandrill_args(args[:template_content]),
-        "message" => {
-          "subject" => args[:subject],
-          "from_email" => args[:from] || @@defaults[:from],
-          "from_name" => args[:from_name] || @@defaults[:from],
-          "to" => args[:to],
-          "headers" => args[:headers],
-          "track_opens" => true,
-          "track_clicks" => true,
-          "auto_text" => true,
-          "url_strip_qs" => true,
-          "bcc_address" => args[:bcc],
-          "global_merge_vars" => mandrill_args(args[:vars]),
-          # "merge_vars" =>[
-          #   {
-          #     "rcpt" => "email@email.com"
-          #     "vars" => {"name" => "VARS", "content" => "vars content"}
-          #   }
-          # ]
+      # Set the template name
+      self.template_name = args.delete(:template)
 
-          "tags" => args[:tags],
-          "google_analytics_domains" => args[:google_analytics_domains],
-          "google_analytics_campaign" => args[:google_analytics_campaign]
-          # "metadata" =>["..."],
-          # "attachments" =>[
-          #   {"type" => "example type", "name" => "example name", "content" => "example content"}
-          # ]
-        }
+      # Set the template content
+      self.template_content = mandrill_args(args.delete(:template_content))
+
+      # Construct message hash
+      self.message = {
+        "subject" => args[:subject],
+        "from_email" => args[:from] || @@defaults[:from],
+        "from_name" => args[:from_name] || @@defaults[:from],
+        "to" => args[:to],
+        "headers" => args[:headers],
+        "track_opens" => true,
+        "track_clicks" => true,
+        "auto_text" => true,
+        "url_strip_qs" => true,
+        "bcc_address" => args[:bcc],
+        "global_merge_vars" => mandrill_args(args[:vars]),
+        # "merge_vars" =>[
+        #   {
+        #     "rcpt" => "email@email.com"
+        #     "vars" => {"name" => "VARS", "content" => "vars content"}
+        #   }
+        # ]
+
+        "tags" => args[:tags],
+        "google_analytics_domains" => args[:google_analytics_domains],
+        "google_analytics_campaign" => args[:google_analytics_campaign]
+        # "metadata" =>["..."],
+        # "attachments" =>[
+        #   {"type" => "example type", "name" => "example name", "content" => "example content"}
+        # ]
       }
 
       # return self so we can chain deliver after the method call, like a normal mailer.
       return self
     end
 
+    # Public: Data hash (deprecated)
     def data
-      @data
+      {
+        "key" => api_key,
+        "template_name" => template_name,
+        "template_content" => template_content,
+        "message" => message
+      }
     end
 
     protected

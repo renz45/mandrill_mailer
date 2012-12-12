@@ -53,6 +53,7 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
 
 * `#default:`
   * `:from` - set the default from email address for the mailer
+  * `:from_name` - set the default from name for the mailer. If not set, defaults to from email address. Setting :from_name in the .mandrill_mail overrides the default.
 
 * `.mandrill_mail`
    * `:template`(required) - Template name from within Mandrill
@@ -88,13 +89,13 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
    * `:google_analytics_campaign` - String indicating the value to set for
    the utm_campaign tracking parameter. If this isn't provided the email's
    from address will be used instead.
-   
+
 ## Sending an email
 
 You can send the email by using the familiar syntax:
 
 `InvitationMailer.invite(invitation).deliver`
-   
+
 ## Creating a test method
 When switching over to Mandrill for transactional emails we found that it was hard to setup a mailer in the console to send test emails easily (those darn designers), but really, you don't want to have to setup test objects everytime you want to send a test email. You can set up a testing 'mock' once and then call the `.test` method to send the test email.
 

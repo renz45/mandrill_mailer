@@ -195,7 +195,7 @@ module MandrillMailer
       self.message = {
         "subject" => args[:subject],
         "from_email" => args[:from] || @@defaults[:from],
-        "from_name" => args[:from_name] || @@defaults[:from],
+        "from_name" => args[:from_name] || @@defaults[:from_name] || @@defaults[:from],
         "to" => args[:to],
         "headers" => args[:headers],
         "track_opens" => true,

@@ -63,7 +63,7 @@ describe MandrillMailer::TemplateMailer do
       subject { mailer.send(:format_to_params, email) }
 
       it 'should format args to a format mandrill likes' do
-        should eq [{"email" => email, "name" => email}] 
+        should eq [{"email" => email, "name" => email}]
       end
     end
 
@@ -71,7 +71,7 @@ describe MandrillMailer::TemplateMailer do
       subject { mailer.send(:format_to_params, [email]) }
 
       it 'should format args to a format mandrill likes' do
-        should eq [{"email" => email, "name" => email}] 
+        should eq [{"email" => email, "name" => email}]
       end
     end
 
@@ -87,7 +87,7 @@ describe MandrillMailer::TemplateMailer do
       subject { mailer.send(:format_to_params, [{"email" => email, "name" => name}]) }
 
       it 'should format args to a format mandrill likes' do
-        should eq [{"email" => email, "name" => name}] 
+        should eq [{"email" => email, "name" => name}]
       end
     end
   end
@@ -96,6 +96,7 @@ describe MandrillMailer::TemplateMailer do
     let(:template_content_name) { 'edit' }
     let(:template_content_content) { 'edit_content' }
     let(:from_email) { 'from@email.com' }
+    let(:from_name) { 'Example Name' }
     let(:var_name) { 'USER_NAME' }
     let(:var_content) { 'bobert' }
     let(:to_email) { 'bob@email.com' }
@@ -121,7 +122,7 @@ describe MandrillMailer::TemplateMailer do
     subject { mailer.mandrill_mail(args) }
 
     before do
-      MandrillMailer::TemplateMailer.default from: from_email
+      MandrillMailer::TemplateMailer.default from: from_email, from_name: from_name
     end
 
     it 'should return the current class instance' do
@@ -140,7 +141,7 @@ describe MandrillMailer::TemplateMailer do
       subject.message.should eq ({
         "subject" => args[:subject],
         "from_email" => from_email,
-        "from_name" => from_email,
+        "from_name" => from_name,
         "to" => [{'email' => to_email, 'name' => to_name}],
         "headers" => args[:headers],
         "track_opens" => true,

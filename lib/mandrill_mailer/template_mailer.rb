@@ -76,9 +76,12 @@ module MandrillMailer
     #
     # Returns options
     def self.default(args)
-      @@defaults ||= {}
-      @@defaults[:from] ||= 'example@email.com'
-      @@defaults.merge!(args)
+      @defaults ||= {}
+      @defaults[:from] ||= 'example@email.com'
+      @defaults.merge!(args)
+    end
+    class << self
+      attr_accessor :defaults
     end
 
     # Public: setup a way to test mailer methods
@@ -101,8 +104,8 @@ module MandrillMailer
     #
     # Returns the duplicated String.
     def self.test_setup_for(mailer_method, &block)
-      @@mailer_methods ||= {}
-      @@mailer_methods[mailer_method] = block
+      @mailer_methods ||= {}
+      @mailer_methods[mailer_method] = block
     end
 
     # Public: Executes a test email
@@ -121,8 +124,8 @@ module MandrillMailer
         raise InvalidEmail.new 'Please specify a :email option(email to send the test to)'
       end
 
-      if @@mailer_methods[mailer_method]
-        @@mailer_methods[mailer_method].call(self.new, options)
+      if @mailer_methods[mailer_method]
+        @mailer_methods[mailer_method].call(self.new, options)
       else
         raise InvalidMailerMethod.new "The mailer method: #{mailer_method} does not have test setup"
       end
@@ -194,8 +197,8 @@ module MandrillMailer
       # Construct message hash
       self.message = {
         "subject" => args[:subject],
-        "from_email" => args[:from] || @@defaults[:from],
-        "from_name" => args[:from_name] || @@defaults[:from_name] || @@defaults[:from],
+        "from_email" => args[:from] || self.class.defaults[:from],
+        "from_name" => args[:from_name] || self.class.defaults[:from_name] || self.class.defaults[:from],
         "to" => args[:to],
         "headers" => args[:headers],
         "track_opens" => true,

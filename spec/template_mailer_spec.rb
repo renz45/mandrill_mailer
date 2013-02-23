@@ -67,6 +67,16 @@ describe MandrillMailer::TemplateMailer do
     end
   end
 
+  describe '#format_boolean' do
+    it 'only returns true or false' do
+      mailer.send(:format_boolean, 1).should eq true
+      mailer.send(:format_boolean, '1').should eq true
+      mailer.send(:format_boolean, nil).should eq false
+      mailer.send(:format_boolean, false).should eq false
+      mailer.send(:format_boolean, true).should eq true
+    end
+  end
+
   describe '#format_to_params' do
     let(:email) { 'bob@email.com' }
     let(:name) { 'bob' }
@@ -121,6 +131,7 @@ describe MandrillMailer::TemplateMailer do
         template: 'Email Template',
         subject: "super secret",
         to: {'email' => to_email, 'name' => to_name},
+        preserve_recipients: false,
         vars: {
           var_name => var_content
         },
@@ -165,6 +176,7 @@ describe MandrillMailer::TemplateMailer do
         "track_clicks" => true,
         "auto_text" => true,
         "url_strip_qs" => true,
+        "preserve_recipients" => false,
         "bcc_address" => args[:bcc],
         "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
         "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],

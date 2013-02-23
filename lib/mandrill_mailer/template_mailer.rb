@@ -202,6 +202,9 @@ module MandrillMailer
       # format the :to param to what Mandrill expects if a string or array is passed
       args[:to] = format_to_params(args[:to])
 
+      # if not provided (nil), set to true (Mandrill default). Otherwise, set to either true or false
+      args[:preserve_recipients] = args[:preserve_recipients].nil? ? true : format_boolean(args[:preserve_recipients])
+
       # Set the template name
       self.template_name = args.delete(:template)
 
@@ -219,6 +222,7 @@ module MandrillMailer
         "track_clicks" => true,
         "auto_text" => true,
         "url_strip_qs" => true,
+        "preserve_recipients" => args[:preserve_recipients],
         "bcc_address" => args[:bcc],
         "global_merge_vars" => mandrill_args(args[:vars]),
         "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
@@ -304,6 +308,11 @@ module MandrillMailer
         rcpt = item.keys[0]
         {'rcpt' => rcpt, 'vars' => mandrill_args(item.fetch(rcpt))}
       end
+    end
+
+    # ensure only true or false is returned given arg
+    def format_boolean(arg)
+      arg ? true : false
     end
 
     # handle if to params is an array of either hashes or strings or the single string

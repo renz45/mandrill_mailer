@@ -42,11 +42,20 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
    def invite(invitation)
      mandrill_mail template: 'Group Invite',
        subject: I18n.t('invitation_mailer.invite.subject'),
-       to: {email: invitation.email, name: 'Honored Guest'},
+       to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
+       # to: {email: invitation.email, name: 'Honored Guest'},
        vars: {
          'OWNER_NAME' => invitation.owner_name,
-         'INVITATION_URL' => new_invitation_url(email: invitation.email, secret: invitation.secret)
-       }
+         'PROJECT_NAME' => invitation.project_name
+       },
+       recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array                  ,
+                         { invitee.email =>
+                           {
+                             'INVITEE_NAME' => invitee.name,
+                             'INVITATION_URL' => new_invitation_url(invitee.email, secret: invitee.secret_code)
+                           }
+                         }
+                       end
    end
  end
  ```
@@ -66,6 +75,10 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
    * `:vars` - A Hash of merge tags made available to the email. Use them in the
      email by wrapping them in `*||*` vars: {'OWNER_NAME' => 'Suzy'} is used
      by doing: `*|OWNER_NAME|*` in the email template within Mandrill
+
+   * `:recipient_vars` - Similar to `:vars`, this is a Hash of merge tags specific to a particular recipient.
+     Use this if you are sending batch transactions and hence need to send multiple emails at one go.
+     ex. `[{'someone@email.com' => {'INVITEE_NAME' => 'Roger'}}, {'another@email.com' => {'INVITEE_NAME' => 'Tommy'}}]`
 
    * `:template_content` - A Hash of values and content for Mandrill editable content blocks.
      In MailChimp templates there are editable regions with 'mc:edit' attributes that look

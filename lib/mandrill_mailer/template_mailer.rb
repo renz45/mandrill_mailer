@@ -297,6 +297,7 @@ module MandrillMailer
 
     # convert a normal hash into the format mandrill needs
     def mandrill_args(args)
+      return [] unless args
       args.map do |k,v|
         {'name' => k, 'content' => v}
       end

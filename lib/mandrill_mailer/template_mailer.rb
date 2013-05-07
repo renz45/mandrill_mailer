@@ -177,7 +177,17 @@ module MandrillMailer
     #               vars: {
     #                 'OWNER_NAME' => invitation.owner_name,
     #                 'INVITATION_URL' => new_invitation_url(email: invitation.email, secret: invitation.secret)
-    #               }
+    #               },
+    #               mvars:  [
+    #                         [
+    #                           {"NAME"=>invitation.owner_name}, 
+    #                           {"EMAIL"=>invitation.email} # => varibles to the first user
+    #                         ],
+    #                         [
+    #                           {"NAME"=>invitation.owner_name} # => varibles to the second user
+    #                         ]
+    #                       ] # The users is orderly by the same order in args[:to]
+    #
     #
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
     def mandrill_mail(args)
@@ -207,13 +217,7 @@ module MandrillMailer
         "url_strip_qs" => true,
         "bcc_address" => args[:bcc],
         "global_merge_vars" => mandrill_args(args[:vars]),
-        # "merge_vars" =>[
-        #   {
-        #     "rcpt" => "email@email.com"
-        #     "vars" => {"name" => "VARS", "content" => "vars content"}
-        #   }
-        # ]
-
+        "merge_vars" => args[:mvars].present? ? recipient_local_vars(args[:to], args[:mvars]) : [],
         "tags" => args[:tags],
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign]
@@ -225,6 +229,18 @@ module MandrillMailer
 
       # return self so we can chain deliver after the method call, like a normal mailer.
       return self
+    end
+    
+    def recipient_local_vars to, mvars
+      rcpts = []
+      to.each_with_index do |to, i|
+        vars = []
+        mvars[i].each do |mvars| 
+          vars += mandrill_args(mvars)
+        end
+        rcpts << { "rcpt" => to[:email] || to["email"], "vars" => vars }
+      end
+      rcpts
     end
 
     # Public: Data hash (deprecated)

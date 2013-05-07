@@ -54,6 +54,19 @@ describe MandrillMailer::TemplateMailer do
       should eq [{'name' => arg_name, 'content' => arg_value}]
     end
   end
+  
+  describe '#recipient_local_vars' do
+    3.times do |i|
+      let("arg_name_#{i}".to_sym) { "USER_NAME_#{i}" }
+      let("arg_value_#{i}".to_sym) { "bob_#{i}@test.com" }
+    end
+
+    subject { mailer.send(:recipient_local_vars, [{ :email => arg_value_0, :name => arg_name_0 }, { :email => arg_value_1, :name => arg_name_1 }], [ [ { arg_name_0 => arg_value_0 }, { arg_name_1 => arg_value_1 }], [{ arg_name_2 => arg_value_2 } ] ]) }
+
+    it 'should convert the args to the correct format' do
+      should eq [{"rcpt"=>arg_value_0, "vars"=>[{"name"=>arg_name_0, "content"=>arg_value_0}, {"name"=>arg_name_1, "content"=>arg_value_1}]}, {"rcpt"=>arg_value_1, "vars"=>[{"name"=>arg_name_2, "content"=>arg_value_2}]}]
+    end
+  end
 
   describe '#format_to_params' do
     let(:email) { 'bob@email.com' }
@@ -110,6 +123,9 @@ describe MandrillMailer::TemplateMailer do
         vars: {
           var_name => var_content
         },
+        mvars: [
+          [{var_name => var_content}]
+        ],
         template_content: {template_content_name => template_content_content},
         headers: {"Reply-To" => "support@email.com"},
         bcc: 'email@email.com',
@@ -144,6 +160,7 @@ describe MandrillMailer::TemplateMailer do
         "from_name" => from_name,
         "to" => [{'email' => to_email, 'name' => to_name}],
         "headers" => args[:headers],
+        "merge_vars" => [{"rcpt"=>to_email, "vars"=>[{"name"=>var_name, "content"=>var_content}]}],
         "track_opens" => true,
         "track_clicks" => true,
         "auto_text" => true,

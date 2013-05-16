@@ -147,5 +147,29 @@ The mailer and options passed to the `.test` method are yielded to the block.
 
 The `:email` option is the only required option, make sure to add at least this to your test object.
 
-## TODO
-Either get rid of the mailchimp gem dependancy or hook into actionmailer like the mailchimp does to send normal emails.
+## Using Delayed Job
+The typical Delayed Job mailer syntax won't work with this as of now. Either create a custom job or que the mailer as you would que a method. Take a look at the following examples:
+
+```ruby
+def send_hallpass_expired_mailer
+  HallpassMailer.hallpass_expired(user).deliver
+end
+handle_asynchronously :send_hallpass_expired_mailer
+```
+
+or using a custom job
+
+```ruby
+def update_email_on_newsletter_subscription
+  Delayed::Job.enqueue( UpdateEmailJob.new(user, old_email, MAILCHIMP_LIST_ID) )
+end
+```
+The job looks like:
+
+```ruby
+class UpdateEmailJob < Struct.new(:user, :list)
+  def perform
+    MailchimpNewsletter.update_user_email(user.email, old_email, list)
+  end
+end
+```

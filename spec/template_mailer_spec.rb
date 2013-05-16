@@ -55,6 +55,28 @@ describe MandrillMailer::TemplateMailer do
     end
   end
 
+  describe '#mandrill_rcpt_args' do
+    let(:rcpt) { 'email@email.com' }
+    let(:arg_name) { 'USER_NAME' }
+    let(:arg_value) { 'bob' }
+
+    subject { mailer.send(:mandrill_rcpt_args, [{rcpt => {arg_name => arg_value}}]) }
+
+    it 'should convert the args to the merge_vars format' do
+      should eq [{'rcpt' => rcpt, 'vars' => [{'name' => arg_name, 'content' => arg_value}]}]
+    end
+  end
+
+  describe '#format_boolean' do
+    it 'only returns true or false' do
+      mailer.send(:format_boolean, 1).should eq true
+      mailer.send(:format_boolean, '1').should eq true
+      mailer.send(:format_boolean, nil).should eq false
+      mailer.send(:format_boolean, false).should eq false
+      mailer.send(:format_boolean, true).should eq true
+    end
+  end
+
   describe '#format_to_params' do
     let(:email) { 'bob@email.com' }
     let(:name) { 'bob' }
@@ -99,6 +121,8 @@ describe MandrillMailer::TemplateMailer do
     let(:from_name) { 'Example Name' }
     let(:var_name) { 'USER_NAME' }
     let(:var_content) { 'bobert' }
+    let(:var_rcpt_name) { 'USER_INFO' }
+    let(:var_rcpt_content) { 'boboblacksheep' }
     let(:to_email) { 'bob@email.com' }
     let(:to_name) { 'bob' }
 
@@ -107,9 +131,13 @@ describe MandrillMailer::TemplateMailer do
         template: 'Email Template',
         subject: "super secret",
         to: {'email' => to_email, 'name' => to_name},
+        preserve_recipients: false,
         vars: {
           var_name => var_content
         },
+        recipient_vars: [
+          { to_email => { var_rcpt_name => var_rcpt_content } }
+        ],
         template_content: {template_content_name => template_content_content},
         headers: {"Reply-To" => "support@email.com"},
         bcc: 'email@email.com',
@@ -148,8 +176,10 @@ describe MandrillMailer::TemplateMailer do
         "track_clicks" => true,
         "auto_text" => true,
         "url_strip_qs" => true,
+        "preserve_recipients" => false,
         "bcc_address" => args[:bcc],
         "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
+        "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
         "tags" => args[:tags],
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign]

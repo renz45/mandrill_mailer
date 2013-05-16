@@ -9,11 +9,20 @@
 #   def invite(invitation)
 #     mandrill_mail template: 'Group Invite',
 #                   subject: I18n.t('invitation_mailer.invite.subject'),
-#                   to: {email: invitation.email, name: 'user level 1'},
+#                   to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
+#                   # to: { email: invitation.email, name: invitation.recipient_name }
 #                   vars: {
 #                     'OWNER_NAME' => invitation.owner_name,
-#                     'INVITATION_URL' => new_invitation_url(email: invitation.email, secret: invitation.secret)
+#                     'PROJECT_NAME' => invitation.project_name
 #                   },
+#                   recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array
+#                                     { invitee.email =>
+#                                       {
+#                                         'INVITEE_NAME' => invitee.name,
+#                                         'INVITATION_URL' => new_invitation_url(invitee.email, secret: invitee.secret_code)
+#                                       }
+#                                     }
+#                                   end,
 #                   template_content: {}
 #   end
 # end
@@ -32,6 +41,10 @@
 #   :vars - A Hash of merge tags made available to the email. Use them in the
 #     email by wrapping them in '*||*' vars: {'OWNER_NAME' => 'Suzy'} is used
 #     by doing: *|OWNER_NAME|* in the email template within Mandrill
+#
+#   :recipient_vars - Similar to :vars, this is a Hash of merge tags specific to a particular recipient.
+#     Use this if you are sending batch transactions and hence need to send multiple emails at one go.
+#     ex. [{'someone@email.com' => {'INVITEE_NAME' => 'Roger'}}, {'another@email.com' => {'INVITEE_NAME' => 'Tommy'}}]
 
 #   :template_content - A Hash of values and content for Mandrill editable content blocks.
 #     In MailChimp templates there are editable regions with 'mc:edit' attributes that look
@@ -163,7 +176,8 @@ module MandrillMailer
     #             :template - Template name in Mandrill
     #             :subject - Subject of the email
     #             :to - Email to send the mandrill email to
-    #             :vars - Merge vars used in the email for dynamic data
+    #             :vars - Global merge vars used in the email for dynamic data
+    #             :recipient_vars - Merge vars used in the email for recipient-specific dynamic data
     #             :bcc - bcc email for the mandrill email
     #             :tags - Tags for the email
     #             :google_analytics_domains - Google analytics domains
@@ -188,6 +202,9 @@ module MandrillMailer
       # format the :to param to what Mandrill expects if a string or array is passed
       args[:to] = format_to_params(args[:to])
 
+      # if not provided (nil), set to true (Mandrill default). Otherwise, set to either true or false
+      args[:preserve_recipients] = args[:preserve_recipients].nil? ? true : format_boolean(args[:preserve_recipients])
+
       # Set the template name
       self.template_name = args.delete(:template)
 
@@ -205,15 +222,10 @@ module MandrillMailer
         "track_clicks" => true,
         "auto_text" => true,
         "url_strip_qs" => true,
+        "preserve_recipients" => args[:preserve_recipients],
         "bcc_address" => args[:bcc],
         "global_merge_vars" => mandrill_args(args[:vars]),
-        # "merge_vars" =>[
-        #   {
-        #     "rcpt" => "email@email.com"
-        #     "vars" => {"name" => "VARS", "content" => "vars content"}
-        #   }
-        # ]
-
+        "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
         "tags" => args[:tags],
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign]
@@ -285,9 +297,23 @@ module MandrillMailer
 
     # convert a normal hash into the format mandrill needs
     def mandrill_args(args)
+      return [] unless args
       args.map do |k,v|
         {'name' => k, 'content' => v}
       end
+    end
+
+    def mandrill_rcpt_args(args)
+      return [] unless args
+      args.map do |item|
+        rcpt = item.keys[0]
+        {'rcpt' => rcpt, 'vars' => mandrill_args(item.fetch(rcpt))}
+      end
+    end
+
+    # ensure only true or false is returned given arg
+    def format_boolean(arg)
+      arg ? true : false
     end
 
     # handle if to params is an array of either hashes or strings or the single string

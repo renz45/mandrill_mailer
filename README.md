@@ -167,7 +167,7 @@ end
 The job looks like:
 
 ```ruby
-class UpdateEmailJob < Struct.new(:user, :list)
+class UpdateEmailJob < Struct.new(:user, :old_email, :list)
   def perform
     MailchimpNewsletter.update_user_email(user.email, old_email, list)
   end

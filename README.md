@@ -103,6 +103,11 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
    the utm_campaign tracking parameter. If this isn't provided the email's
    from address will be used instead.
 
+   * `:attachments` - An array of file objects with the following keys:
+      * `file:` This is the actual file, it will be converted to byte data in the mailer
+      * `filename:` The name of the file
+      * `mimetype:` This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
+
 ## Sending an email
 
 You can send the email by using the familiar syntax:

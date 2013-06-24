@@ -23,7 +23,8 @@
 #                                       }
 #                                     }
 #                                   end,
-#                   template_content: {}
+#                   template_content: {},
+#                   attachments: [{file: File.read(File.expand_path('assets/some_image.png')), filename: 'My Image.png', mimetype: 'image/png'}]
 #   end
 # end
 
@@ -51,6 +52,11 @@
 #     a little like: '<div mc:edit="header">My email content</div>' You can insert content directly into
 #     these fields by passing a Hash {'header' => 'my email content'}
 
+#   :attachments - An array of file objects with the following keys:
+#       file: This is the actual file, it will be converted to byte data in the mailer
+#       filename: The name of the file
+#       mimetype: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
+
 # :headers - Extra headers to add to the message (currently only Reply-To and X-* headers are allowed) {"...": "..."}
 
 # :bcc - Add an email to bcc to
@@ -68,6 +74,7 @@
 # :google_analytics_campaign - String indicating the value to set for
 #   the utm_campaign tracking parameter. If this isn't provided the email's
 #   from address will be used instead.
+require 'base64'
 
 module MandrillMailer
   class TemplateMailer
@@ -228,11 +235,9 @@ module MandrillMailer
         "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
         "tags" => args[:tags],
         "google_analytics_domains" => args[:google_analytics_domains],
-        "google_analytics_campaign" => args[:google_analytics_campaign]
+        "google_analytics_campaign" => args[:google_analytics_campaign],
         # "metadata" =>["..."],
-        # "attachments" =>[
-        #   {"type" => "example type", "name" => "example name", "content" => "example content"}
-        # ]
+        "attachments" => mandrill_attachment_args(args[:attachments])
       }
 
       # return self so we can chain deliver after the method call, like a normal mailer.
@@ -250,6 +255,17 @@ module MandrillMailer
     end
 
     protected
+
+    def mandrill_attachment_args(args)
+      return unless args
+      args.map do |attachment|
+        attachment.symbolize_keys!
+        type = attachment[:mimetype]
+        name = attachment[:filename]
+        file = attachment[:file]
+        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
+      end
+    end
 
     # Makes this class act as a singleton without it actually being a singleton
     # This keeps the syntax the same as the orginal mailers so we can swap quickly if something

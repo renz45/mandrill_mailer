@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'base64'
 
 describe MandrillMailer::TemplateMailer do
   let(:image_path) { '/assets/image.jpg' }
@@ -9,7 +10,7 @@ describe MandrillMailer::TemplateMailer do
   before do
     MandrillMailer.config.api_key = api_key
     MandrillMailer.config.default_url_options = { host: default_host }
-    MandrillMailer.config.any_instance.stub(:image_path).and_return(image_path)
+    MandrillMailer.config.stub(:image_path).and_return(image_path)
   end
 
   describe '#image_path' do
@@ -125,6 +126,9 @@ describe MandrillMailer::TemplateMailer do
     let(:var_rcpt_content) { 'boboblacksheep' }
     let(:to_email) { 'bob@email.com' }
     let(:to_name) { 'bob' }
+    let(:attachment_file) { File.read(File.expand_path('spec/support/test_image.png')) }
+    let(:attachment_filename) { 'test_image.png' }
+    let(:attachment_mimetype) { 'image/png' }
 
     let(:args) do
       {
@@ -143,7 +147,8 @@ describe MandrillMailer::TemplateMailer do
         bcc: 'email@email.com',
         tags: ['tag1'],
         google_analytics_domains: ["http://site.com"],
-        google_analytics_campaign: '1237423474'
+        google_analytics_campaign: '1237423474',
+        attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}]
       }
     end
 
@@ -182,7 +187,8 @@ describe MandrillMailer::TemplateMailer do
         "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
         "tags" => args[:tags],
         "google_analytics_domains" => args[:google_analytics_domains],
-        "google_analytics_campaign" => args[:google_analytics_campaign]
+        "google_analytics_campaign" => args[:google_analytics_campaign],
+        "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]
       })
     end
 

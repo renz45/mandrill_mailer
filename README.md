@@ -165,16 +165,17 @@ handle_asynchronously :send_hallpass_expired_mailer
 or using a custom job
 
 ```ruby
-def update_email_on_newsletter_subscription
-  Delayed::Job.enqueue( UpdateEmailJob.new(user, old_email, MAILCHIMP_LIST_ID) )
+def update_email_on_newsletter_subscription(user)
+  Delayed::Job.enqueue( UpdateEmailJob.new(user_id: user.id) )
 end
 ```
-The job looks like:
+The job looks like (Don't send full objects into jobs, send ids and requery inside the job. This prevents Delayed Job from having to serialize and deserialize whole ActiveRecord Objectsm and you're data is current when the job runs):
 
 ```ruby
-class UpdateEmailJob < Struct.new(:user, :old_email, :list)
+class UpdateEmailJob < Struct.new(:user_id)
   def perform
-    MailchimpNewsletter.update_user_email(user.email, old_email, list)
+    user = User.find(user_id)
+    HallpassMailer.hallpass_expired(user).deliver
   end
 end
 ```

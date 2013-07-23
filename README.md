@@ -48,6 +48,8 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
          'OWNER_NAME' => invitation.owner_name,
          'PROJECT_NAME' => invitation.project_name
        },
+       important: true,
+       inline_css: true,
        recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array                  ,
                          { invitee.email =>
                            {
@@ -102,6 +104,10 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
    * `:google_analytics_campaign` - String indicating the value to set for
    the utm_campaign tracking parameter. If this isn't provided the email's
    from address will be used instead.
+
+   * `:important` - whether or not this message is important, and should be delivered ahead of non-important messages.
+
+   * `:inline_css` - whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size.
 
    * `:attachments` - An array of file objects with the following keys:
       * `file:` This is the actual file, it will be converted to byte data in the mailer

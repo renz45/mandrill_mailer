@@ -175,7 +175,7 @@ def update_email_on_newsletter_subscription(user)
   Delayed::Job.enqueue( UpdateEmailJob.new(user_id: user.id) )
 end
 ```
-The job looks like (Don't send full objects into jobs, send ids and requery inside the job. This prevents Delayed Job from having to serialize and deserialize whole ActiveRecord Objectsm and you're data is current when the job runs):
+The job looks like (Don't send full objects into jobs, send ids and requery inside the job. This prevents Delayed Job from having to serialize and deserialize whole ActiveRecord Objects and this way, your data is current when the job runs):
 
 ```ruby
 class UpdateEmailJob < Struct.new(:user_id)

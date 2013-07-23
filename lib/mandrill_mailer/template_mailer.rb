@@ -24,7 +24,9 @@
 #                                     }
 #                                   end,
 #                   template_content: {},
-#                   attachments: [{file: File.read(File.expand_path('assets/some_image.png')), filename: 'My Image.png', mimetype: 'image/png'}]
+#                   attachments: [{file: File.read(File.expand_path('assets/some_image.png')), filename: 'My Image.png', mimetype: 'image/png'}],
+#                   important: true,
+#                   inline_css: true
 #   end
 # end
 
@@ -74,6 +76,11 @@
 # :google_analytics_campaign - String indicating the value to set for
 #   the utm_campaign tracking parameter. If this isn't provided the email's
 #   from address will be used instead.
+
+# :inline_css - whether or not to automatically inline all CSS styles provided in the
+#   message HTML - only for HTML documents less than 256KB in size
+
+# :important - whether or not this message is important, and should be delivered ahead of non-important messages
 require 'base64'
 
 module MandrillMailer
@@ -189,6 +196,8 @@ module MandrillMailer
     #             :tags - Tags for the email
     #             :google_analytics_domains - Google analytics domains
     #             :google_analytics_campaign - Google analytics campaign
+    #             :inline_css - whether or not to automatically inline all CSS styles provided in the message HTML
+    #             :important - whether or not this message is important
     #
     # Examples
     #
@@ -225,9 +234,11 @@ module MandrillMailer
         "from_name" => args[:from_name] || self.class.defaults[:from_name] || self.class.defaults[:from],
         "to" => args[:to],
         "headers" => args[:headers],
+        "important" => args[:important],
         "track_opens" => true,
         "track_clicks" => true,
         "auto_text" => true,
+        "inline_css" => args[:inline_css],
         "url_strip_qs" => true,
         "preserve_recipients" => args[:preserve_recipients],
         "bcc_address" => args[:bcc],

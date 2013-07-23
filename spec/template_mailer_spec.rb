@@ -148,7 +148,9 @@ describe MandrillMailer::TemplateMailer do
         tags: ['tag1'],
         google_analytics_domains: ["http://site.com"],
         google_analytics_campaign: '1237423474',
-        attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}]
+        attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
+        inline_css: true,
+        important: true
       }
     end
 
@@ -177,6 +179,8 @@ describe MandrillMailer::TemplateMailer do
         "from_name" => from_name,
         "to" => [{'email' => to_email, 'name' => to_name}],
         "headers" => args[:headers],
+        "important" => args[:important],
+        "inline_css" => args[:inline_css],
         "track_opens" => true,
         "track_clicks" => true,
         "auto_text" => true,

@@ -114,6 +114,12 @@ Creating a new Mandrill Mailer is similar to a normal Rails mailer:
       * `filename:` The name of the file
       * `mimetype:` This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
 
+   * `:async` - Whether or not this message should be sent asynchronously
+
+   * `:ip_pool` - The name of the dedicated ip pool that should be used to send the message
+
+   * `:send_at` - When this message should be sent
+
 ## Sending an email
 
 You can send the email by using the familiar syntax:

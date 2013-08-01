@@ -129,6 +129,7 @@ describe MandrillMailer::TemplateMailer do
     let(:attachment_file) { File.read(File.expand_path('spec/support/test_image.png')) }
     let(:attachment_filename) { 'test_image.png' }
     let(:attachment_mimetype) { 'image/png' }
+    let(:send_at) { Time.utc(2020, 1, 1, 8, 0) }
 
     let(:args) do
       {
@@ -150,7 +151,8 @@ describe MandrillMailer::TemplateMailer do
         google_analytics_campaign: '1237423474',
         attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
         inline_css: true,
-        important: true
+        important: true,
+        send_at: send_at
       }
     end
 
@@ -202,7 +204,14 @@ describe MandrillMailer::TemplateMailer do
         "template_name" => subject.template_name,
         "template_content" => subject.template_content,
         "message" => subject.message,
+        "async" => subject.async,
+        "ip_pool" => subject.ip_pool,
+        "send_at" => subject.send_at
       })
+    end
+
+    it 'should set send_at option' do
+      subject.send_at.should eq('2020-01-01 08:00:00')
     end
   end
 

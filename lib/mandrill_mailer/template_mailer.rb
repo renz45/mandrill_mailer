@@ -168,6 +168,15 @@ module MandrillMailer
     # Public: Other information on the message to send
     attr_accessor :message
 
+    # Public: Enable background sending mode
+    attr_accessor :async
+
+    # Public:  Name of the dedicated IP pool that should be used to send the message
+    attr_accessor :ip_pool
+
+    # Public: When message should be sent
+    attr_accessor :send_at
+
     # Public: Triggers the stored Mandril params to be sent to the Mandrill api
     #
     # text - The String to be duplicated.
@@ -181,7 +190,7 @@ module MandrillMailer
     # Returns the duplicated String.
     def deliver
       mandrill = Mandrill::API.new(api_key)
-      mandrill.messages.send_template(template_name, template_content, message)
+      mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
 
     # Public: Build the hash needed to send to the mandrill api
@@ -198,6 +207,9 @@ module MandrillMailer
     #             :google_analytics_campaign - Google analytics campaign
     #             :inline_css - whether or not to automatically inline all CSS styles provided in the message HTML
     #             :important - whether or not this message is important
+    #             :async - whether or not this message should be sent asynchronously
+    #             :ip_pool - name of the dedicated IP pool that should be used to send the message
+    #             :send_at - when this message should be sent
     #
     # Examples
     #
@@ -226,6 +238,12 @@ module MandrillMailer
 
       # Set the template content
       self.template_content = mandrill_args(args.delete(:template_content))
+
+      self.async = args.delete(:async)
+      self.ip_pool = args.delete(:ip_pool)
+      if args.has_key?(:send_at)
+        self.send_at = args.delete(:send_at).getutc.strftime('%Y-%m-%d %H:%M:%S')
+      end
 
       # Construct message hash
       self.message = {
@@ -261,7 +279,10 @@ module MandrillMailer
         "key" => api_key,
         "template_name" => template_name,
         "template_content" => template_content,
-        "message" => message
+        "message" => message,
+        "async" => async,
+        "ip_pool" => ip_pool,
+        "send_at" => send_at
       }
     end
 

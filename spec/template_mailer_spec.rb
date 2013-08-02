@@ -152,7 +152,10 @@ describe MandrillMailer::TemplateMailer do
         attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
         inline_css: true,
         important: true,
-        send_at: send_at
+        send_at: send_at,
+        track_opens: false,
+        track_clicks: false,
+        url_strip_qs: false
       }
     end
 
@@ -183,10 +186,10 @@ describe MandrillMailer::TemplateMailer do
         "headers" => args[:headers],
         "important" => args[:important],
         "inline_css" => args[:inline_css],
-        "track_opens" => true,
-        "track_clicks" => true,
+        "track_opens" => args[:track_opens],
+        "track_clicks" => args[:track_clicks],
         "auto_text" => true,
-        "url_strip_qs" => true,
+        "url_strip_qs" => args[:url_strip_qs],
         "preserve_recipients" => false,
         "bcc_address" => args[:bcc],
         "global_merge_vars" => [{"name" => var_name, "content" => var_content}],

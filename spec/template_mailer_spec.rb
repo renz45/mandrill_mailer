@@ -195,6 +195,7 @@ describe MandrillMailer::TemplateMailer do
         "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
         "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
         "tags" => args[:tags],
+        "metadata" => args[:metadata],
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign],
         "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]

@@ -230,9 +230,6 @@ module MandrillMailer
       # format the :to param to what Mandrill expects if a string or array is passed
       args[:to] = format_to_params(args[:to])
 
-      # if not provided (nil), set to true (Mandrill default). Otherwise, set to either true or false
-      args[:preserve_recipients] = args[:preserve_recipients].nil? ? true : format_boolean(args[:preserve_recipients])
-
       # Set the template name
       self.template_name = args.delete(:template)
 

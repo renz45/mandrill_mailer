@@ -147,6 +147,7 @@ describe MandrillMailer::TemplateMailer do
         headers: {"Reply-To" => "support@email.com"},
         bcc: 'email@email.com',
         tags: ['tag1'],
+        subaccount: "subaccount1",
         google_analytics_domains: ["http://site.com"],
         google_analytics_campaign: '1237423474',
         attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
@@ -196,6 +197,7 @@ describe MandrillMailer::TemplateMailer do
         "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
         "tags" => args[:tags],
         "metadata" => args[:metadata],
+        "subaccount" => args[:subaccount],
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign],
         "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]

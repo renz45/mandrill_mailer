@@ -260,6 +260,7 @@ module MandrillMailer
         "global_merge_vars" => mandrill_args(args[:vars]),
         "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
         "tags" => args[:tags],
+        "subaccount" => args[:subaccount],
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign],
         "metadata" => args[:metadata],

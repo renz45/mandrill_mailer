@@ -1,3 +1,7 @@
+* 0.4.2
+  Add the ability to intercept emails before they are sent in the config
+  see the specs for more info
+
 * 0.4.1
   add subaccount parameter
 

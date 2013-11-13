@@ -91,6 +91,7 @@ module MandrillMailer
 
     class InvalidEmail < StandardError; end
     class InvalidMailerMethod < StandardError; end
+    class InvalidInterceptorParams < StandardError; end
 
     # Public: Defaults for the mailer. Currently the only option is from:
     #
@@ -266,6 +267,13 @@ module MandrillMailer
         "metadata" => args[:metadata],
         "attachments" => mandrill_attachment_args(args[:attachments])
       }
+
+      unless MandrillMailer.config.interceptor_params.nil?
+        unless MandrillMailer.config.interceptor_params.is_a?(Hash)
+          raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
+        end
+        self.message.merge!(MandrillMailer.config.interceptor_params.stringify_keys)
+      end
 
       # return self so we can chain deliver after the method call, like a normal mailer.
       return self

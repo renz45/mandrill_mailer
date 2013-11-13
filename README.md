@@ -1,5 +1,5 @@
 # Mandrill Mailer gem
-MandrilMailer class for sending transactional emails through mandril.
+MandrillMailer class for sending transactional emails through Mandrill.
 Only template based emails are supported at this time.
 
 ## Usage

@@ -178,32 +178,6 @@ describe MandrillMailer::TemplateMailer do
       subject.template_content.should eq [{'name' => template_content_name, 'content' => template_content_content}]
     end
 
-    it 'should produce the correct message' do
-      subject.message.should eq ({
-        "subject" => args[:subject],
-        "from_email" => from_email,
-        "from_name" => from_name,
-        "to" => [{'email' => to_email, 'name' => to_name}],
-        "headers" => args[:headers],
-        "important" => args[:important],
-        "inline_css" => args[:inline_css],
-        "track_opens" => args[:track_opens],
-        "track_clicks" => args[:track_clicks],
-        "auto_text" => true,
-        "url_strip_qs" => args[:url_strip_qs],
-        "preserve_recipients" => false,
-        "bcc_address" => args[:bcc],
-        "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
-        "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
-        "tags" => args[:tags],
-        "metadata" => args[:metadata],
-        "subaccount" => args[:subaccount],
-        "google_analytics_domains" => args[:google_analytics_domains],
-        "google_analytics_campaign" => args[:google_analytics_campaign],
-        "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]
-      })
-    end
-
     it 'should retain data method' do
       subject.data.should eq({
         "key" => MandrillMailer.config.api_key,
@@ -218,6 +192,76 @@ describe MandrillMailer::TemplateMailer do
 
     it 'should set send_at option' do
       subject.send_at.should eq('2020-01-01 08:00:00')
+    end
+
+    context "without interceptor" do
+      it 'should produce the correct message' do
+        subject.message.should eq ({
+          "subject" => args[:subject],
+          "from_email" => from_email,
+          "from_name" => from_name,
+          "to" => [{'email' => to_email, 'name' => to_name}],
+          "headers" => args[:headers],
+          "important" => args[:important],
+          "inline_css" => args[:inline_css],
+          "track_opens" => args[:track_opens],
+          "track_clicks" => args[:track_clicks],
+          "auto_text" => true,
+          "url_strip_qs" => args[:url_strip_qs],
+          "preserve_recipients" => false,
+          "bcc_address" => args[:bcc],
+          "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
+          "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
+          "tags" => args[:tags],
+          "metadata" => args[:metadata],
+          "subaccount" => args[:subaccount],
+          "google_analytics_domains" => args[:google_analytics_domains],
+          "google_analytics_campaign" => args[:google_analytics_campaign],
+          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]
+        })
+      end
+    end
+
+    context "with interceptor" do
+      before(:each) do
+        @intercepted_params = {
+          to: { email: 'interceptedto@test.com', name: 'Mr. Interceptor' },
+          tags: ['intercepted-tag'],
+          bcc_address: 'interceptedbbc@email.com'
+        }
+        MandrillMailer.config.interceptor_params = @intercepted_params
+      end
+
+      it "should raise an error if interceptor params is not a Hash" do
+        MandrillMailer.config.interceptor_params = "error"
+        expect { subject }.to raise_error(MandrillMailer::TemplateMailer::InvalidInterceptorParams, "The interceptor_params config must be a Hash")
+      end
+
+      it 'should produce the correct message' do
+        subject.message.should eq ({
+          "subject" => args[:subject],
+          "from_email" => from_email,
+          "from_name" => from_name,
+          "to" => @intercepted_params[:to],
+          "headers" => args[:headers],
+          "important" => args[:important],
+          "inline_css" => args[:inline_css],
+          "track_opens" => args[:track_opens],
+          "track_clicks" => args[:track_clicks],
+          "auto_text" => true,
+          "url_strip_qs" => args[:url_strip_qs],
+          "preserve_recipients" => false,
+          "bcc_address" => @intercepted_params[:bcc_address],
+          "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
+          "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
+          "tags" => @intercepted_params[:tags],
+          "metadata" => args[:metadata],
+          "subaccount" => args[:subaccount],
+          "google_analytics_domains" => args[:google_analytics_domains],
+          "google_analytics_campaign" => args[:google_analytics_campaign],
+          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]
+        })
+      end
     end
   end
 

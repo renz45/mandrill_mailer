@@ -191,3 +191,14 @@ class UpdateEmailJob < Struct.new(:user_id)
   end
 end
 ```
+
+## Using an interceptor
+You can set a mailer interceptor to override any params used when you deliver an e-mail.
+
+Example:
+
+```ruby
+MandrillMailer.configure do |config|
+  config.interceptor_params = { to: "emailtothatwillbeusedinall@emailssent.com" }
+end
+```

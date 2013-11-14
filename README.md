@@ -10,7 +10,7 @@ You don't need to add the ActionMailer stuff unless your still using ActionMaile
 This just plugs into the Mandrill smtp servers. If your doing template based emails
 through the Mandrill api you really only need the `MandrillMailer.configure` part
 
-```
+```ruby
 ActionMailer::Base.smtp_settings = {
     :address   => "smtp.mandrillapp.com",
     :port      => 587,
@@ -35,31 +35,31 @@ in your environment config files:
 ## Creating a new mailer
 Creating a new Mandrill Mailer is similar to a normal Rails mailer:
 
-```
- class InvitationMailer < MandrillMailer::TemplateMailer
-   default from: 'support@example.com'
+```ruby
+class InvitationMailer < MandrillMailer::TemplateMailer
+  default from: 'support@example.com'
 
-   def invite(invitation)
-     mandrill_mail template: 'Group Invite',
-       subject: I18n.t('invitation_mailer.invite.subject'),
-       to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
-       # to: {email: invitation.email, name: 'Honored Guest'},
-       vars: {
-         'OWNER_NAME' => invitation.owner_name,
-         'PROJECT_NAME' => invitation.project_name
-       },
-       important: true,
-       inline_css: true,
-       recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array                  ,
-                         { invitee.email =>
-                           {
-                             'INVITEE_NAME' => invitee.name,
-                             'INVITATION_URL' => new_invitation_url(invitee.email, secret: invitee.secret_code)
-                           }
-                         }
-                       end
-   end
- end
+  def invite(invitation)
+    mandrill_mail template: 'Group Invite',
+                  subject: I18n.t('invitation_mailer.invite.subject'),
+                  to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
+                  # to: {email: invitation.email, name: 'Honored Guest'},
+                  vars: {
+                    'OWNER_NAME' => invitation.owner_name,
+                    'PROJECT_NAME' => invitation.project_name
+                  },
+                  important: true,
+                  inline_css: true,
+                  recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array
+                    { invitee.email =>
+                      {
+                        'INVITEE_NAME' => invitee.name,
+                        'INVITATION_URL' => new_invitation_url(invitee.email, secret: invitee.secret_code)
+                      }
+                    }
+                  end
+  end
+end
  ```
 
 * `#default:`
@@ -133,7 +133,7 @@ You can test the above email by typing: `InvitationMailer.test(:invite, email:<y
 
 The test for this particular Mailer is setup like so:
 
-```
+```ruby
 test_setup_for :invite do |mailer, options|
     invitation = MandrillMailer::Mock.new({
       email: options[:email],
@@ -150,7 +150,7 @@ If in order to represent a url within a mock, make sure there is a `url` or `pat
 for example, if I had a course mock and I was using the `course_url` route helper within the mailer
 I would create the mock like so:
 
-```
+```ruby
 course = MandrillMailer::Mock.new({
   title: 'zombies',
   type: 'Ruby',

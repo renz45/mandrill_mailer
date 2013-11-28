@@ -14,6 +14,10 @@
 #   }
 #   expect(email).to_not be_nil
 #
+# Don't forget to clear out deliveries:
+#
+#   before :each { MandrillMailer.deliveries.clear }
+#
 require 'mandrill_mailer'
 
 module MandrillMailer

@@ -164,6 +164,29 @@ The mailer and options passed to the `.test` method are yielded to the block.
 
 The `:email` option is the only required option, make sure to add at least this to your test object.
 
+## Offline Testing
+You can turn on offline testing by requiring this file (say, in your spec_helper.rb):
+
+```ruby
+require 'mandrill_mailer/offline'
+```
+
+And then if you wish you can look at the contents of `MandrillMailer.deliveries` to see whether an email was queued up by your test:
+
+```ruby
+email = MandrillMailer::deliveries.detect { |mail|
+  mail.template_name == 'my-template' &&
+  mail.message['to'].any? { |to| to['email'] == 'my@email.com' }
+}
+expect(email).to_not be_nil
+```
+
+Don't forget to clear out deliveries:
+
+```ruby
+before :each { MandrillMailer.deliveries.clear }
+```
+
 ## Using Delayed Job
 The typical Delayed Job mailer syntax won't work with this as of now. Either create a custom job or que the mailer as you would que a method. Take a look at the following examples:
 

@@ -1,3 +1,6 @@
+* 0.4.3
+  Add the ability to look at deliveries for offline testing.
+
 * 0.4.2
   Add the ability to intercept emails before they are sent in the config
   see the specs for more info

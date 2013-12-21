@@ -314,7 +314,7 @@ module MandrillMailer
     end
 
     def self.respond_to?(method, include_private = false)
-      super || instance_methods.include?(method)
+      super || instance_methods.include?(method.to_sym)
     end
 
     # Proxy route helpers to rails if Rails exists. Doing routes this way

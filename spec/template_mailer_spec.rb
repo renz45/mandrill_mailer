@@ -319,4 +319,25 @@ describe MandrillMailer::TemplateMailer do
       klassB.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassB'
     end
   end
+
+  describe '#respond_to' do
+    it 'can respond to a symbol' do
+      klassA = Class.new(MandrillMailer::TemplateMailer) do
+        def test_method
+
+        end
+      end
+
+      klassA.respond_to?(:test_method).should be_true
+    end
+    it 'can respond to a string' do
+      klassA = Class.new(MandrillMailer::TemplateMailer) do
+        def test_method
+
+        end
+      end
+
+      klassA.respond_to?('test_method').should be_true
+    end
+  end
 end

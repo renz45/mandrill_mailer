@@ -176,7 +176,7 @@ And then if you wish you can look at the contents of `MandrillMailer.deliveries`
 ```ruby
 email = MandrillMailer::deliveries.detect { |mail|
   mail.template_name == 'my-template' &&
-  mail.message['to'].any? { |to| to['email'] == 'my@email.com' }
+  mail.message['to'].any? { |to| to[:email] == 'my@email.com' }
 }
 expect(email).to_not be_nil
 ```
@@ -214,6 +214,17 @@ class UpdateEmailJob < Struct.new(:user_id)
   end
 end
 ```
+
+## Using Sidekiq
+
+To use this gem with Sidekiq, add `config/initializers/mandrill_mailer_sidekiq.rb`
+
+```ruby
+::MandrillMailer::TemplateMailer.extend(Sidekiq::Extensions::ActionMailer)
+```
+
+Use the same way you use ActionMailer. More info: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions#actionmailer
+
 
 ## Using an interceptor
 You can set a mailer interceptor to override any params used when you deliver an e-mail.

@@ -3,7 +3,7 @@
 
 # Example usage:
 
-# class InvitationMailer < MandrillMailer
+# class InvitationMailer < MandrillMailer::TemplateMailer
 #   default from: 'support@codeschool.com'
 
 #   def invite(invitation)
@@ -290,6 +290,18 @@ module MandrillMailer
         "ip_pool" => ip_pool,
         "send_at" => send_at
       }
+    end
+
+    def from
+      self.message && self.message['from_email']
+    end
+
+    def to
+      self.message && self.message['to']
+    end
+
+    def bcc
+      self.message && self.message['bcc_address']
     end
 
     protected

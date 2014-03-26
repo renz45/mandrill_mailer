@@ -216,14 +216,29 @@ end
 ```
 
 ## Using Sidekiq
+Create a custom worker:
 
-To use this gem with Sidekiq, add `config/initializers/mandrill_mailer_sidekiq.rb`
+```ruby
+class UpdateEmailJob
+  include Sidekiq::Worker
+  def perform(user_id)
+    user = User.find(user_id)
+    HallpassMailer.hallpass_expired(user).deliver
+  end
+end
+
+#called by
+UpdateEmailJob.perform_async(<user_id>)
+```
+
+Or depending on how up to date things are, try adding the following to to `config/initializers/mandrill_mailer_sidekiq.rb`
 
 ```ruby
 ::MandrillMailer::TemplateMailer.extend(Sidekiq::Extensions::ActionMailer)
 ```
 
-Use the same way you use ActionMailer. More info: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions#actionmailer
+This should enable you to use this mailer the same way you use ActionMailer.
+More info: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions#actionmailer
 
 
 ## Using an interceptor

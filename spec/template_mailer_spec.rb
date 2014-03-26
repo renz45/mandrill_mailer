@@ -7,10 +7,57 @@ describe MandrillMailer::TemplateMailer do
   let(:mailer) { described_class.new }
   let(:api_key) { '1237861278' }
 
+  let(:template_content_name) { 'edit' }
+  let(:template_content_content) { 'edit_content' }
+  let(:from_email) { 'from@email.com' }
+  let(:from_name) { 'Example Name' }
+  let(:var_name) { 'USER_NAME' }
+  let(:var_content) { 'bobert' }
+  let(:var_rcpt_name) { 'USER_INFO' }
+  let(:var_rcpt_content) { 'boboblacksheep' }
+  let(:to_email) { 'bob@email.com' }
+  let(:to_name) { 'bob' }
+  let(:attachment_file) { File.read(File.expand_path('spec/support/test_image.png')) }
+  let(:attachment_filename) { 'test_image.png' }
+  let(:attachment_mimetype) { 'image/png' }
+  let(:send_at) { Time.utc(2020, 1, 1, 8, 0) }
+  let(:bcc) { "bcc@email.com" }
+
+  let(:args) do
+    {
+      from: from_email,
+      template: 'Email Template',
+      subject: "super secret",
+      to: {'email' => to_email, 'name' => to_name},
+      preserve_recipients: false,
+      vars: {
+        var_name => var_content
+      },
+      recipient_vars: [
+        { to_email => { var_rcpt_name => var_rcpt_content } }
+      ],
+      template_content: {template_content_name => template_content_content},
+      headers: {"Reply-To" => "support@email.com"},
+      bcc: bcc,
+      tags: ['tag1'],
+      subaccount: "subaccount1",
+      google_analytics_domains: ["http://site.com"],
+      google_analytics_campaign: '1237423474',
+      attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
+      inline_css: true,
+      important: true,
+      send_at: send_at,
+      track_opens: false,
+      track_clicks: false,
+      url_strip_qs: false
+    }
+  end
+
   before do
     MandrillMailer.config.api_key = api_key
     MandrillMailer.config.default_url_options = { host: default_host }
     MandrillMailer.config.stub(:image_path).and_return(image_path)
+    MandrillMailer::TemplateMailer.default from: from_email, from_name: from_name
   end
 
   describe '#image_path' do
@@ -116,55 +163,7 @@ describe MandrillMailer::TemplateMailer do
   end
 
   describe '#mandrill_mail' do
-    let(:template_content_name) { 'edit' }
-    let(:template_content_content) { 'edit_content' }
-    let(:from_email) { 'from@email.com' }
-    let(:from_name) { 'Example Name' }
-    let(:var_name) { 'USER_NAME' }
-    let(:var_content) { 'bobert' }
-    let(:var_rcpt_name) { 'USER_INFO' }
-    let(:var_rcpt_content) { 'boboblacksheep' }
-    let(:to_email) { 'bob@email.com' }
-    let(:to_name) { 'bob' }
-    let(:attachment_file) { File.read(File.expand_path('spec/support/test_image.png')) }
-    let(:attachment_filename) { 'test_image.png' }
-    let(:attachment_mimetype) { 'image/png' }
-    let(:send_at) { Time.utc(2020, 1, 1, 8, 0) }
-
-    let(:args) do
-      {
-        template: 'Email Template',
-        subject: "super secret",
-        to: {'email' => to_email, 'name' => to_name},
-        preserve_recipients: false,
-        vars: {
-          var_name => var_content
-        },
-        recipient_vars: [
-          { to_email => { var_rcpt_name => var_rcpt_content } }
-        ],
-        template_content: {template_content_name => template_content_content},
-        headers: {"Reply-To" => "support@email.com"},
-        bcc: 'email@email.com',
-        tags: ['tag1'],
-        subaccount: "subaccount1",
-        google_analytics_domains: ["http://site.com"],
-        google_analytics_campaign: '1237423474',
-        attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
-        inline_css: true,
-        important: true,
-        send_at: send_at,
-        track_opens: false,
-        track_clicks: false,
-        url_strip_qs: false
-      }
-    end
-
     subject { mailer.mandrill_mail(args) }
-
-    before do
-      MandrillMailer::TemplateMailer.default from: from_email, from_name: from_name
-    end
 
     it 'should return the current class instance' do
       should eq mailer
@@ -230,6 +229,10 @@ describe MandrillMailer::TemplateMailer do
           bcc_address: 'interceptedbbc@email.com'
         }
         MandrillMailer.config.interceptor_params = @intercepted_params
+      end
+
+      after do
+        MandrillMailer.config.interceptor_params = nil
       end
 
       it "should raise an error if interceptor params is not a Hash" do
@@ -338,6 +341,30 @@ describe MandrillMailer::TemplateMailer do
       end
 
       klassA.respond_to?('test_method').should be_true
+    end
+  end
+
+  describe "#from" do
+    subject { mailer.mandrill_mail(args) }
+
+    it "returns the from email" do
+      subject.from.should eq from_email
+    end
+  end
+
+  describe "#to" do
+    subject { mailer.mandrill_mail(args) }
+
+    it "returns the to email data" do
+      subject.to.should eq [{"email" => to_email, "name" => to_name}]
+    end
+  end
+
+  describe "#bcc" do
+    subject { mailer.mandrill_mail(args) }
+
+    it "returns the bcc email/s" do
+      subject.bcc.should eq bcc
     end
   end
 end

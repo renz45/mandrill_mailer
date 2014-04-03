@@ -69,7 +69,7 @@ end
 * `.mandrill_mail`
    * `:template`(required) - Template name from within Mandrill
 
-   * `:subject`(required) - Subject of the email
+   * `:subject` - Subject of the email. If no subject supplied, it will fall back to the template default subject from within Mandrill
 
    * `:to`(required) - Accepts an email String, or hash with :name and :email keys
      ex. `{email: 'someone@email.com', name: 'Bob Bertly'}`

@@ -1,3 +1,12 @@
+# 0.4.5
+- [BUGFIX] Declare `mandrill-api` gem as a runtime dependency to prevent load errors.
+
+# 0.4.4
+- [FEATURE] Added `to`, `from` and `bcc` getters to `TemplateMailer`. (@renz45)
+- [IMPROVEMENT] Fixes respond_to method as it doesn't follow the way standard ruby respond_to behaves. (@tpaktop)
+- [DOCS] Documented how to use the gem with Sidekiq (@elado, @renz45)
+- [DOCS] Documented fallback to Mandrill default subject on `mandrill_mail` subject. (@Advocation)
+
 # 0.4.3
 - [FEATURE] Add the ability to look at deliveries for offline testing.
 

@@ -115,6 +115,7 @@ module MandrillMailer
     # Public: setup a way to test mailer methods
     #
     # mailer_method - Name of the mailer method the test setup is for
+    # 
     # block - Block of code to execute to perform the test. The mailer
     # and options are passed to the block. The options have to
     # contain at least the :email to send the test to.
@@ -139,6 +140,7 @@ module MandrillMailer
     # Public: Executes a test email
     #
     # mailer_method - Method to execute
+    # 
     # options - The Hash options used to refine the selection (default: {}):
     #   :email - The email to send the test to.
     #

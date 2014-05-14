@@ -96,7 +96,7 @@ module MandrillMailer
     # Public: Defaults for the mailer. Currently the only option is from:
     #
     # options - The Hash options used to refine the selection (default: {}):
-    #             :from - Default from email address
+    #   :from - Default from email address
     #
     # Examples
     #
@@ -115,20 +115,21 @@ module MandrillMailer
     # Public: setup a way to test mailer methods
     #
     # mailer_method - Name of the mailer method the test setup is for
+    # 
     # block - Block of code to execute to perform the test. The mailer
-    #         and options are passed to the block. The options have to
-    #         contain at least the :email to send the test to.
+    # and options are passed to the block. The options have to
+    # contain at least the :email to send the test to.
     #
     # Examples
     #
-    # test_setup_for :invite do |mailer, options|
-    #   invitation = OpenStruct.new({
-    #     email: options[:email],
-    #     owner_name: 'foobar',
-    #     secret: rand(9000000..1000000).to_s
-    #   })
-    #   mailer.invite(invitation).deliver
-    # end
+    #   test_setup_for :invite do |mailer, options|
+    #     invitation = OpenStruct.new({
+    #       email: options[:email],
+    #       owner_name: 'foobar',
+    #       secret: rand(9000000..1000000).to_s
+    #     })
+    #     mailer.invite(invitation).deliver
+    #   end
     #
     # Returns the duplicated String.
     def self.test_setup_for(mailer_method, &block)
@@ -139,12 +140,13 @@ module MandrillMailer
     # Public: Executes a test email
     #
     # mailer_method - Method to execute
+    # 
     # options - The Hash options used to refine the selection (default: {}):
-    #             :email - The email to send the test to.
+    #   :email - The email to send the test to.
     #
     # Examples
     #
-    # InvitationMailer.test(:invite, email: 'benny@envylabs.com')
+    #   InvitationMailer.test(:invite, email: 'benny@envylabs.com')
     #
     # Returns the duplicated String.
     def self.test(mailer_method, options={})
@@ -214,7 +216,7 @@ module MandrillMailer
     #
     # Examples
     #
-    # mandrill_mail template: 'Group Invite',
+    #   mandrill_mail template: 'Group Invite',
     #               subject: I18n.t('invitation_mailer.invite.subject'),
     #               to: invitation.email,
     #               vars: {

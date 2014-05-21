@@ -59,6 +59,11 @@
 #       filename: The name of the file
 #       mimetype: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
 
+#   :images - An array of embedded images to add to the message:
+#       file: This is the actual file, it will be converted to byte data in the mailer
+#       filename: The Content ID of the image - use <img src="cid:THIS_VALUE"> to reference the image in your HTML content
+#       mimetype: The MIME type of the image - must start with "image/"
+
 # :headers - Extra headers to add to the message (currently only Reply-To and X-* headers are allowed) {"...": "..."}
 
 # :bcc - Add an email to bcc to

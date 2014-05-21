@@ -20,6 +20,11 @@ describe MandrillMailer::TemplateMailer do
   let(:attachment_file) { File.read(File.expand_path('spec/support/test_image.png')) }
   let(:attachment_filename) { 'test_image.png' }
   let(:attachment_mimetype) { 'image/png' }
+
+  let(:image_file) { File.read(File.expand_path('spec/support/test_image.png')) }
+  let(:image_filename) { 'test_image.png' }
+  let(:image_mimetype) { 'image/png' }
+
   let(:send_at) { Time.utc(2020, 1, 1, 8, 0) }
   let(:bcc) { "bcc@email.com" }
 
@@ -44,6 +49,7 @@ describe MandrillMailer::TemplateMailer do
       google_analytics_domains: ["http://site.com"],
       google_analytics_campaign: '1237423474',
       attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
+      images: [{file: image_file, filename: image_filename, mimetype: image_mimetype}],
       inline_css: true,
       important: true,
       send_at: send_at,
@@ -216,7 +222,8 @@ describe MandrillMailer::TemplateMailer do
           "subaccount" => args[:subaccount],
           "google_analytics_domains" => args[:google_analytics_domains],
           "google_analytics_campaign" => args[:google_analytics_campaign],
-          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]
+          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}],
+          "images" => [{'type' => image_mimetype, 'name' => image_filename, 'content' => Base64.encode64(image_file)}]
         })
       end
     end
@@ -262,7 +269,8 @@ describe MandrillMailer::TemplateMailer do
           "subaccount" => args[:subaccount],
           "google_analytics_domains" => args[:google_analytics_domains],
           "google_analytics_campaign" => args[:google_analytics_campaign],
-          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}]
+          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}],
+          "images" => [{'type' => image_mimetype, 'name' => image_filename, 'content' => Base64.encode64(image_file)}]
         })
       end
     end

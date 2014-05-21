@@ -114,6 +114,11 @@ end
       * `filename:` The name of the file
       * `mimetype:` This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
 
+   * `:images` - An array of embedded images to add to the message:
+      * `file:` This is the actual file, it will be converted to byte data in the mailer
+      * `filename:` The Content ID of the image - use <img src="cid:THIS_VALUE"> to reference the image in your HTML content
+      * `mimetype:` The MIME type of the image - must start with "image/"
+
    * `:async` - Whether or not this message should be sent asynchronously
 
    * `:ip_pool` - The name of the dedicated ip pool that should be used to send the message

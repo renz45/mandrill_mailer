@@ -1,3 +1,6 @@
+# 0.4.6
+- [FEATURE] Added support for images array of embedded images
+
 # 0.4.5
 - [BUGFIX] Declare `mandrill-api` gem as a runtime dependency to prevent load errors.
 

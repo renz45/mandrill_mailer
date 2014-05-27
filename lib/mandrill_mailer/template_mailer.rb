@@ -59,6 +59,11 @@
 #       filename: The name of the file
 #       mimetype: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
 
+#   :images - An array of embedded images to add to the message:
+#       file: This is the actual file, it will be converted to byte data in the mailer
+#       filename: The Content ID of the image - use <img src="cid:THIS_VALUE"> to reference the image in your HTML content
+#       mimetype: The MIME type of the image - must start with "image/"
+
 # :headers - Extra headers to add to the message (currently only Reply-To and X-* headers are allowed) {"...": "..."}
 
 # :bcc - Add an email to bcc to
@@ -267,7 +272,8 @@ module MandrillMailer
         "google_analytics_domains" => args[:google_analytics_domains],
         "google_analytics_campaign" => args[:google_analytics_campaign],
         "metadata" => args[:metadata],
-        "attachments" => mandrill_attachment_args(args[:attachments])
+        "attachments" => mandrill_attachment_args(args[:attachments]),
+        "images" => mandrill_images_args(args[:images])
       }
 
       unless MandrillMailer.config.interceptor_params.nil?
@@ -309,6 +315,17 @@ module MandrillMailer
     protected
 
     def mandrill_attachment_args(args)
+      return unless args
+      args.map do |attachment|
+        attachment.symbolize_keys!
+        type = attachment[:mimetype]
+        name = attachment[:filename]
+        file = attachment[:file]
+        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
+      end
+    end
+
+    def mandrill_images_args(args)
       return unless args
       args.map do |attachment|
         attachment.symbolize_keys!

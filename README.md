@@ -40,7 +40,7 @@ class InvitationMailer < MandrillMailer::TemplateMailer
   default from: 'support@example.com'
 
   def invite(invitation)
-    mandrill_mail template: 'Group Invite',
+    mandrill_mail template: 'group-invite',
                   subject: I18n.t('invitation_mailer.invite.subject'),
                   to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
                   # to: {email: invitation.email, name: 'Honored Guest'},
@@ -67,7 +67,7 @@ end
   * `:from_name` - set the default from name for the mailer. If not set, defaults to from email address. Setting :from_name in the .mandrill_mail overrides the default.
 
 * `.mandrill_mail`
-   * `:template`(required) - Template name from within Mandrill
+   * `:template`(required) - Template slug from within Mandrill (for backwards-compatibility, the template name may also be used but the immutable slug is preferred)
 
    * `:subject` - Subject of the email. If no subject supplied, it will fall back to the template default subject from within Mandrill
 

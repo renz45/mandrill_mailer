@@ -1,14 +1,31 @@
-# Mandrill Mailer gem
-MandrillMailer class for sending transactional emails through Mandrill.
-Only template based emails are supported at this time.
+# Mandrill Mailer 
+[![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](rubygems.org/gems/mandrill_mailer) 
+[![Code Climate](http://img.shields.io/codeclimate/github/renz45/mandrill_mailer.svg)](https://codeclimate.com/github/renz45/mandrill_mailer) 
+[![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer)
+
+Inherit the MandrillMailer class in your existing Rails mailers to send transactional emails through Mandrill using their template-based emails.
+
+## Installation
+Add this line to your application's Gemfile:
+
+```
+gem 'mandrill_mailer'
+```
+
+And then execute:
+
+```
+$ bundle install
+```
+
+Or install it yourself as:
+
+```
+$ gem install mandrill_mailer
+```
 
 ## Usage
-Add `gem 'mandrill_mailer'` to your Gemfile
-
-Add this to your `mail.rb` in initializers.
-You don't need to add the ActionMailer stuff unless your still using ActionMailer emails.
-This just plugs into the Mandrill smtp servers. If your doing template based emails
-through the Mandrill api you really only need the `MandrillMailer.configure` part
+Add the following to your `mail.rb` in your Rails app's `config/initializers` directory:
 
 ```ruby
 ActionMailer::Base.smtp_settings = {
@@ -25,15 +42,23 @@ MandrillMailer.configure do |config|
 end
 ```
 
-Don't forget to setup your ENV variables on your server
+You don't need to add the ActionMailer stuff unless you're still using ActionMailer emails.
 
-You will also need to set default_url_options for the mailer, similar to action mailer
-in your environment config files:
+This uses the Mandrill SMTP servers. If you're using template-based emails
+through the Mandrill API you only need the `MandrillMailer.configure` portion.
 
-`config.mandrill_mailer.default_url_options = { :host => 'localhost' }`
+Do not forget to setup the environment (`ENV`) variables on your server instead 
+of hardcoding your Mandrill username and password in the `mail.rb` initializer.
+
+You will also need to set `default_url_options` for the mailer, similar to ActionMailer
+in your environment config files in `config/environments`:
+
+```ruby
+config.mandrill_mailer.default_url_options = { :host => 'localhost' }
+```
 
 ## Creating a new mailer
-Creating a new Mandrill Mailer is similar to a normal Rails mailer:
+Creating a new Mandrill mailer is similar to a typical Rails one:
 
 ```ruby
 class InvitationMailer < MandrillMailer::TemplateMailer
@@ -60,7 +85,7 @@ class InvitationMailer < MandrillMailer::TemplateMailer
                   end
   end
 end
- ```
+```
 
 * `#default:`
   * `:from` - set the default from email address for the mailer

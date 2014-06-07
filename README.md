@@ -65,10 +65,14 @@ class InvitationMailer < MandrillMailer::TemplateMailer
   default from: 'support@example.com'
 
   def invite(invitation)
+    # in this example `invitation.invitees` is an Array
+    invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }
+
     mandrill_mail template: 'group-invite',
                   subject: I18n.t('invitation_mailer.invite.subject'),
-                  to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
-                  # to: {email: invitation.email, name: 'Honored Guest'},
+                  to: invitees,
+                  # to: invitation.email,
+                  # to: { email: invitation.email, name: 'Honored Guest' },
                   vars: {
                     'OWNER_NAME' => invitation.owner_name,
                     'PROJECT_NAME' => invitation.project_name
@@ -96,23 +100,25 @@ end
 
    * `:subject` - Subject of the email. If no subject supplied, it will fall back to the template default subject from within Mandrill
 
-   * `:to`(required) - Accepts an email String, or hash with :name and :email keys
-     ex. `{email: 'someone@email.com', name: 'Bob Bertly'}`
+   * `:to`(required) - Accepts an email String, a Hash with :name and :email keys, or an Array of Hashes with :name and :email keys
+      - examples:
+        1. `'example@domain.com'`
+        2. `{ email: 'someone@email.com', name: 'Bob Bertly' }`
+        3. `[{ email: 'someone@email.com', name: 'Bob Bertly' }, { email: 'other@email.com', name: 'Claire Nayo' }]`
 
    * `:vars` - A Hash of merge tags made available to the email. Use them in the
-     email by wrapping them in `*||*` vars: {'OWNER_NAME' => 'Suzy'} is used
-     by doing: `*|OWNER_NAME|*` in the email template within Mandrill
+     email by wrapping them in `*||*`. For example `{'OWNER_NAME' => 'Suzy'}` is used by doing: `*|OWNER_NAME|*` in the email template within Mandrill
 
-   * `:recipient_vars` - Similar to `:vars`, this is a Hash of merge tags specific to a particular recipient.
+   * `:recipient_vars` - Similar to `:vars`, this is a Hash of merge vars specific to a particular recipient.
      Use this if you are sending batch transactions and hence need to send multiple emails at one go.
      ex. `[{'someone@email.com' => {'INVITEE_NAME' => 'Roger'}}, {'another@email.com' => {'INVITEE_NAME' => 'Tommy'}}]`
 
    * `:template_content` - A Hash of values and content for Mandrill editable content blocks.
      In MailChimp templates there are editable regions with 'mc:edit' attributes that look
-     a little like: `<div mc:edit="header">My email content</div>` You can insert content directly into
+     like: `<div mc:edit="header">My email content</div>` You can insert content directly into
      these fields by passing a Hash `{'header' => 'my email content'}`
 
-   * `:headers` - Extra headers to add to the message (currently only Reply-To and X-* headers are allowed) {"...": "..."}
+   * `:headers` - Extra headers to add to the message (currently only `Reply-To` and `X-*` headers are allowed) {"...": "..."}
 
    * `:bcc` - Add an email to bcc to
 
@@ -141,7 +147,7 @@ end
 
    * `:images` - An array of embedded images to add to the message:
       * `file:` This is the actual file, it will be converted to byte data in the mailer
-      * `filename:` The Content ID of the image - use <img src="cid:THIS_VALUE"> to reference the image in your HTML content
+      * `filename:` The Content ID of the image - use `<img src="cid:THIS_VALUE">` to reference the image in your HTML content
       * `mimetype:` The MIME type of the image - must start with "image/"
 
    * `:async` - Whether or not this message should be sent asynchronously

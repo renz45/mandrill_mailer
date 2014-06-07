@@ -51,6 +51,7 @@
 #       3) 
 #         [{ email: 'someone@email.com', name: 'Bob Bertly' },
 #          { email: 'other@email.com', name: 'Claire Nayo' }]
+#
 
 #   :vars - A Hash of merge tags made available to the email. Use them in the
 #     email by wrapping them in '*||*' vars: {'OWNER_NAME' => 'Suzy'} is used

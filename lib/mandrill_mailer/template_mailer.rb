@@ -7,9 +7,12 @@
 #   default from: 'support@codeschool.com'
 
 #   def invite(invitation)
+#     invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }
+#
 #     mandrill_mail template: 'Group Invite',
 #                   subject: I18n.t('invitation_mailer.invite.subject'),
-#                   to: invitation.invitees.map {|invitee| { email: invitee.email, name: invitee.name }},
+#                   to: invitees,
+#                   # to: invitation.email
 #                   # to: { email: invitation.email, name: invitation.recipient_name }
 #                   vars: {
 #                     'OWNER_NAME' => invitation.owner_name,
@@ -38,8 +41,17 @@
 
 #   :subject(required) - Subject of the email
 
-#   :to(required) - Accepts an email String, or hash with :name and :email keys
-#     ex. {email: 'someone@email.com', name: 'Bob Bertly'}
+#   :to(required) - Accepts an email String, a Hash with :name and :email keys
+#                   or an Array of Hashes with :name and :email keys
+#     examples:
+#       1)
+#         'example@domain.com`
+#       2)
+#         { email: 'someone@email.com', name: 'Bob Bertly' }
+#       3) 
+#         [{ email: 'someone@email.com', name: 'Bob Bertly' },
+#          { email: 'other@email.com', name: 'Claire Nayo' }]
+#
 
 #   :vars - A Hash of merge tags made available to the email. Use them in the
 #     email by wrapping them in '*||*' vars: {'OWNER_NAME' => 'Suzy'} is used

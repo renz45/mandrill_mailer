@@ -320,10 +320,10 @@ describe MandrillMailer::TemplateMailer do
   describe 'defaults' do
     it 'should not share between different subclasses' do
       klassA = Class.new(MandrillMailer::TemplateMailer) do
-        default from_name: 'ClassAA'
+        default from_name: 'ClassA'
       end
       klassB = Class.new(MandrillMailer::TemplateMailer) do
-        default from_name: 'ClassBB'
+        default from_name: 'ClassB'
       end
 
       klassA.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassAA'

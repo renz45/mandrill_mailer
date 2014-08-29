@@ -1,3 +1,6 @@
+# 0.4.7
+- [IMPROVEMENT] Reworked how defaults were stored so that they are accessible when being extended
+
 # 0.4.6
 - [FEATURE] Added support for images array of embedded images
 

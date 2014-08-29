@@ -120,13 +120,21 @@ module MandrillMailer
     #   default from: 'foo@bar.com'
     #
     # Returns options
+    def self.defaults
+      @defaults || super_defaults
+    end
+
+    def self.super_defaults
+      superclass.defaults if superclass.respond_to?(:defaults)
+    end
+
     def self.default(args)
       @defaults ||= {}
       @defaults[:from] ||= 'example@email.com'
       @defaults.merge!(args)
     end
     class << self
-      attr_accessor :defaults
+      attr_writer :defaults
     end
 
     # Public: setup a way to test mailer methods

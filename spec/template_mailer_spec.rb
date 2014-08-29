@@ -326,8 +326,8 @@ describe MandrillMailer::TemplateMailer do
         default from_name: 'ClassB'
       end
 
-      klassA.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassAA'
-      klassB.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassBB'
+      klassA.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassA'
+      klassB.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassB'
     end
 
     it 'should use defaults from the parent class' do

@@ -329,6 +329,27 @@ describe MandrillMailer::TemplateMailer do
       klassA.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassA'
       klassB.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassB'
     end
+
+    it 'should use defaults from the parent class' do
+      klassA = Class.new(MandrillMailer::TemplateMailer) do
+        default from_name: 'ClassA'
+      end
+      klassB = Class.new(klassA) do
+      end
+
+      klassB.mandrill_mail({vars:{}}).message['from_name'].should eq 'ClassA'
+    end
+
+    it 'should allow overriding defaults from the parent' do
+      klassA = Class.new(MandrillMailer::TemplateMailer) do
+        default from_name: 'ClassA'
+      end
+      klassB = Class.new(klassA) do
+        default from_name: 'ClassB'
+      end
+
+      klassB.mandrill_mail({vars:{}}).message['from_name'].should eq 'ClassB'
+    end
   end
 
   describe '#respond_to' do

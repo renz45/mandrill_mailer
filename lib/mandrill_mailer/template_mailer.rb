@@ -328,6 +328,10 @@ module MandrillMailer
       self.message && self.message['to']
     end
 
+    def to=(values)
+      self.message && self.message['to'] = format_to_params(values)
+    end
+
     def bcc
       self.message && self.message['bcc_address']
     end

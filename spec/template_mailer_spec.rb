@@ -389,6 +389,15 @@ describe MandrillMailer::TemplateMailer do
     end
   end
 
+  describe '#to=' do
+    subject { mailer.mandrill_mail(args) }
+
+    it "updates the to email data" do
+      subject.to = 'bob@example.com'
+      subject.to.should eq [{"email" => "bob@example.com", "name" => "bob@example.com"}]
+    end
+  end
+
   describe "#bcc" do
     subject { mailer.mandrill_mail(args) }
 

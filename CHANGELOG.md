@@ -1,3 +1,6 @@
+# 0.4.8
+- [IMPROVEMENT] Add a to= setter to the template mailer
+
 # 0.4.7
 - [IMPROVEMENT] Reworked how defaults were stored so that they are accessible when being extended
 

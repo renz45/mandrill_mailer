@@ -205,17 +205,7 @@ module MandrillMailer
     # Public: When message should be sent
     attr_accessor :send_at
 
-    # Public: Triggers the stored Mandril params to be sent to the Mandrill api
-    #
-    # text - The String to be duplicated.
-    # count - The Integer number of times to duplicate the text.
-    #
-    # Examples
-    #
-    #   multiplex('Tom', 4)
-    #   # => 'TomTomTomTom'
-    #
-    # Returns the duplicated String.
+    # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
       mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)

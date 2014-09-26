@@ -358,11 +358,42 @@ describe MandrillMailer::TemplateMailer do
         MandrillMailer.config.interceptor_params = "error"
         expect { subject }.to raise_error(MandrillMailer::TemplateMailer::InvalidInterceptorParams, "The interceptor_params config must be a Hash")
       end
-
       
+      it 'should produce the correct message' do
+        expect(subject.message.to_a - {
+          "text" =>  "Example text content",
+          "html" => "<p>Example HTML content</p>",
+          "view_content_link" =>  "http://www.nba.com",
+          "subject" => args[:subject],
+          "from_email" => from_email,
+          "from_name" => from_name,
+          "to" => @intercepted_params[:to],
+          "headers" => args[:headers],
+          "important" => args[:important],
+          "inline_css" => args[:inline_css],
+          "track_opens" => args[:track_opens],
+          "track_clicks" => args[:track_clicks],
+          "auto_text" => true,
+          "url_strip_qs" => args[:url_strip_qs],
+          "preserve_recipients" => false,
+          "bcc_address" => @intercepted_params[:bcc_address],
+          "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
+          "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
+          "tags" => @intercepted_params[:tags],
+          "metadata" => args[:metadata],
+          "subaccount" => args[:subaccount],
+          "google_analytics_domains" => args[:google_analytics_domains],
+          "google_analytics_campaign" => args[:google_analytics_campaign],
+          "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}],
+          "images" => [{'type' => image_mimetype, 'name' => image_filename, 'content' => Base64.encode64(image_file)}]
+        }.to_a).to eq []
+      
+      end
+  
     end
   end
-  
+    
+    
   describe 'url helpers in mailer' do
     subject { mailer.send(:course_url) }
 

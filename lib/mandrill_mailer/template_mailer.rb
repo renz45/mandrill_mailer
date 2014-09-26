@@ -205,11 +205,24 @@ module MandrillMailer
     # Public: When message should be sent
     attr_accessor :send_at
 
+    def is_template?
+      template_name.present? && template_content.present?
+    end
+
+    
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
-      mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
+      check_required_options(message)
+      if is_template?
+        
+        mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
+      else
+        
+        mandrill.messages.send(message, async, ip_pool, send_at)
+      end
     end
+    
 
     # Public: Build the hash needed to send to the mandrill api
     #
@@ -242,17 +255,22 @@ module MandrillMailer
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
     def mandrill_mail(args)
 
-      # Mandrill requires template content to be there
-      args[:template_content] = {"blank" => ""} if args[:template_content].blank?
-
-      # format the :to param to what Mandrill expects if a string or array is passed
-      args[:to] = format_to_params(args[:to])
-
       # Set the template name
       self.template_name = args.delete(:template)
 
+      
+      # Mandrill requires template content to be there
+      if self.template_name.present?
+        args[:template_content] = {"blank" => ""} if args[:template_content].blank?
+      end
+      
+      # format the :to param to what Mandrill expects if a string or array is passed
+      args[:to] = format_to_params(args[:to])
+
+      
       # Set the template content
-      self.template_content = mandrill_args(args.delete(:template_content))
+      tc = args.delete(:template_content)
+      self.template_content = mandrill_args(tc) if tc.present?
 
       self.async = args.delete(:async)
       self.ip_pool = args.delete(:ip_pool)
@@ -434,6 +452,17 @@ module MandrillMailer
 
     def api_key
       MandrillMailer.config.api_key
+    end
+    
+    def check_required_options(options)
+      if is_template?
+        names = ['to']
+      else 
+        names = ['text', 'html', 'to']
+      end
+      names.each do |name|
+        warn("Mandrill Mailer Warn: missing required option: #{name}") unless options.has_key?(name)
+      end
     end
   end
 end

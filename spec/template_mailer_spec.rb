@@ -62,7 +62,9 @@ describe MandrillMailer::TemplateMailer do
   before do
     MandrillMailer.config.api_key = api_key
     MandrillMailer.config.default_url_options = { host: default_host }
-    MandrillMailer.config.stub(:image_path).and_return(image_path)
+    #MandrillMailer.config.stub(:image_path).and_return(image_path)
+    allow(MandrillMailer.config).to receive(:image_path).and_return(image_path)
+    
     MandrillMailer::TemplateMailer.default from: from_email, from_name: from_name
   end
 
@@ -87,13 +89,14 @@ describe MandrillMailer::TemplateMailer do
       end
 
       it 'should return the image url' do
-        mailer.send(:image_path, image).should eq ActionController::Base.asset_path(image)
+        #mailer.send(:image_path, image).should eq ActionController::Base.asset_path(image)
+        expect(mailer.send(:image_path, image)).to eq(ActionController::Base.asset_path(image))
       end
     end
 
     context 'Rails does not exist' do
       it 'should raise exception' do
-        ->{ subject }.should raise_error
+        expect{ subject }.to raise_error
       end
     end
   end
@@ -123,11 +126,11 @@ describe MandrillMailer::TemplateMailer do
 
   describe '#format_boolean' do
     it 'only returns true or false' do
-      mailer.send(:format_boolean, 1).should eq true
-      mailer.send(:format_boolean, '1').should eq true
-      mailer.send(:format_boolean, nil).should eq false
-      mailer.send(:format_boolean, false).should eq false
-      mailer.send(:format_boolean, true).should eq true
+      expect(mailer.send(:format_boolean, 1)).to eq true
+      expect(mailer.send(:format_boolean, '1')).to eq true
+      expect(mailer.send(:format_boolean, nil)).to eq false
+      expect(mailer.send(:format_boolean, false)).to eq false
+      expect(mailer.send(:format_boolean, true)).to eq true
     end
   end
 
@@ -176,15 +179,15 @@ describe MandrillMailer::TemplateMailer do
     end
 
     it 'should set the template name' do
-      subject.template_name.should eq 'Email Template'
+      expect(subject.template_name).to eq 'Email Template'
     end
 
     it 'should set the template content' do
-      subject.template_content.should eq [{'name' => template_content_name, 'content' => template_content_content}]
+      expect(subject.template_content).to eq [{'name' => template_content_name, 'content' => template_content_content}]
     end
 
     it 'should retain data method' do
-      subject.data.should eq({
+      expect(subject.data).to eq({
         "key" => MandrillMailer.config.api_key,
         "template_name" => subject.template_name,
         "template_content" => subject.template_content,
@@ -196,12 +199,12 @@ describe MandrillMailer::TemplateMailer do
     end
 
     it 'should set send_at option' do
-      subject.send_at.should eq('2020-01-01 08:00:00')
+      expect(subject.send_at).to eq('2020-01-01 08:00:00')
     end
 
     context "without interceptor" do
       it 'should produce the correct message' do
-        subject.message.should eq ({
+        expect(subject.message).to eq ({
           "subject" => args[:subject],
           "from_email" => from_email,
           "from_name" => from_name,
@@ -248,7 +251,7 @@ describe MandrillMailer::TemplateMailer do
       end
 
       it 'should produce the correct message' do
-        subject.message.should eq ({
+        expect(subject.message).to eq ({
           "subject" => args[:subject],
           "from_email" => from_email,
           "from_name" => from_name,
@@ -300,19 +303,19 @@ describe MandrillMailer::TemplateMailer do
       end
 
       it 'should return the correct route' do
-        subject.should eq router.course_url(host: host)
+        expect(subject).to eq router.course_url(host: host)
       end
 
       context 'route helper with an argument' do
         it 'should return the correct route' do
-          subject.should eq router.course_url({id: 1, title: 'zombies'}, host: host)
+          expect(subject).to eq router.course_url({id: 1, title: 'zombies'}, host: host)
         end
       end
     end
 
     context 'Rails is not defined' do
       it 'should raise an exception' do
-        ->{subject}.should raise_error
+        expect{subject}.to raise_error
       end
     end
   end
@@ -326,8 +329,8 @@ describe MandrillMailer::TemplateMailer do
         default from_name: 'ClassB'
       end
 
-      klassA.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassA'
-      klassB.mandrill_mail({vars: {}}).message['from_name'].should eq 'ClassB'
+      expect(klassA.mandrill_mail({vars: {}}).message['from_name']).to eq 'ClassA'
+      expect(klassB.mandrill_mail({vars: {}}).message['from_name']).to eq 'ClassB'
     end
 
     it 'should use defaults from the parent class' do
@@ -337,7 +340,7 @@ describe MandrillMailer::TemplateMailer do
       klassB = Class.new(klassA) do
       end
 
-      klassB.mandrill_mail({vars:{}}).message['from_name'].should eq 'ClassA'
+      expect(klassB.mandrill_mail({vars:{}}).message['from_name']).to eq 'ClassA'
     end
 
     it 'should allow overriding defaults from the parent' do
@@ -348,7 +351,7 @@ describe MandrillMailer::TemplateMailer do
         default from_name: 'ClassB'
       end
 
-      klassB.mandrill_mail({vars:{}}).message['from_name'].should eq 'ClassB'
+      expect(klassB.mandrill_mail({vars:{}}).message['from_name']).to eq 'ClassB'
     end
   end
 
@@ -360,7 +363,7 @@ describe MandrillMailer::TemplateMailer do
         end
       end
 
-      klassA.respond_to?(:test_method).should be_true
+      expect(klassA).to respond_to('test_method')
     end
     it 'can respond to a string' do
       klassA = Class.new(MandrillMailer::TemplateMailer) do
@@ -369,7 +372,7 @@ describe MandrillMailer::TemplateMailer do
         end
       end
 
-      klassA.respond_to?('test_method').should be_true
+      expect(klassA).to respond_to('test_method')
     end
   end
 
@@ -377,7 +380,7 @@ describe MandrillMailer::TemplateMailer do
     subject { mailer.mandrill_mail(args) }
 
     it "returns the from email" do
-      subject.from.should eq from_email
+      expect(subject.from).to eq from_email
     end
   end
 
@@ -385,7 +388,7 @@ describe MandrillMailer::TemplateMailer do
     subject { mailer.mandrill_mail(args) }
 
     it "returns the to email data" do
-      subject.to.should eq [{"email" => to_email, "name" => to_name}]
+      expect(subject.to).to eq [{"email" => to_email, "name" => to_name}]
     end
   end
 
@@ -394,7 +397,7 @@ describe MandrillMailer::TemplateMailer do
 
     it "updates the to email data" do
       subject.to = 'bob@example.com'
-      subject.to.should eq [{"email" => "bob@example.com", "name" => "bob@example.com"}]
+      expect(subject.to).to eq [{"email" => "bob@example.com", "name" => "bob@example.com"}]
     end
   end
 
@@ -402,7 +405,7 @@ describe MandrillMailer::TemplateMailer do
     subject { mailer.mandrill_mail(args) }
 
     it "returns the bcc email/s" do
-      subject.bcc.should eq bcc
+      expect(subject.bcc).to eq bcc
     end
   end
 end

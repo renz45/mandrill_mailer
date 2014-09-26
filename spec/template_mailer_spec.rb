@@ -58,6 +58,39 @@ describe MandrillMailer::TemplateMailer do
       url_strip_qs: false
     }
   end
+  
+  
+  let(:message_args) do
+    {
+      text: "Example text content",
+      html: "<p>Example HTML content</p>",
+      view_content_link: "http://www.nba.com",
+      from: from_email,
+      subject: "super secret",
+      to: {'email' => to_email, 'name' => to_name},
+      preserve_recipients: false,
+      vars: {
+        var_name => var_content
+      },
+      recipient_vars: [
+        { to_email => { var_rcpt_name => var_rcpt_content } }
+      ],
+      headers: {"Reply-To" => "support@email.com"},
+      bcc: bcc,
+      tags: ['tag1'],
+      subaccount: "subaccount1",
+      google_analytics_domains: ["http://site.com"],
+      google_analytics_campaign: '1237423474',
+      attachments: [{file: attachment_file, filename: attachment_filename, mimetype: attachment_mimetype}],
+      images: [{file: image_file, filename: image_filename, mimetype: image_mimetype}],
+      inline_css: true,
+      important: true,
+      send_at: send_at,
+      track_opens: false,
+      track_clicks: false,
+      url_strip_qs: false
+    }
+  end
 
   before do
     MandrillMailer.config.api_key = api_key
@@ -182,6 +215,10 @@ describe MandrillMailer::TemplateMailer do
       expect(subject.template_name).to eq 'Email Template'
     end
 
+    it 'should be a template' do
+      expect(subject.is_template?).to eq true
+    end
+    
     it 'should set the template content' do
       expect(subject.template_content).to eq [{'name' => template_content_name, 'content' => template_content_content}]
     end
@@ -279,6 +316,53 @@ describe MandrillMailer::TemplateMailer do
     end
   end
 
+  
+  describe '#mandrill_message_mail' do
+    subject { mailer.mandrill_mail(message_args) }
+
+
+
+    it 'should not set the template name' do
+      expect(subject.template_name).to be_nil
+    end
+
+    it 'should not set the template content' do
+      expect(subject.template_content).to be_nil
+    end
+    
+    it 'should not be a template' do
+      expect(subject.is_template?).to eq false
+    end
+
+    it 'should set send_at option' do
+      expect(subject.send_at).to eq('2020-01-01 08:00:00')
+    end
+
+   
+
+    context "with interceptor" do
+      before(:each) do
+        @intercepted_params = {
+          to: { email: 'interceptedto@test.com', name: 'Mr. Interceptor' },
+          tags: ['intercepted-tag'],
+          bcc_address: 'interceptedbbc@email.com'
+        }
+        MandrillMailer.config.interceptor_params = @intercepted_params
+      end
+
+      after do
+        MandrillMailer.config.interceptor_params = nil
+      end
+
+      it "should raise an error if interceptor params is not a Hash" do
+        MandrillMailer.config.interceptor_params = "error"
+        expect { subject }.to raise_error(MandrillMailer::TemplateMailer::InvalidInterceptorParams, "The interceptor_params config must be a Hash")
+      end
+
+      
+    end
+  end
+  
   describe 'url helpers in mailer' do
     subject { mailer.send(:course_url) }
 

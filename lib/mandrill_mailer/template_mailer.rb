@@ -303,7 +303,7 @@ module MandrillMailer
         "attachments" => mandrill_attachment_args(args[:attachments]),
         "images" => mandrill_images_args(args[:images])
       }
-
+      self.message.merge({'text' => args[:text], 'html' => args[:html], 'view_content_link' => args[:view_content_link]})
       unless MandrillMailer.config.interceptor_params.nil?
         unless MandrillMailer.config.interceptor_params.is_a?(Hash)
           raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
@@ -456,9 +456,9 @@ module MandrillMailer
     
     def check_required_options(options)
       if is_template?
-        names = ['to']
+        names = ['to', 'from']
       else 
-        names = ['text', 'html', 'to']
+        names = ['text', 'html', 'from', 'subject', 'to']
       end
       names.each do |name|
         warn("Mandrill Mailer Warn: missing required option: #{name}") unless options.has_key?(name)

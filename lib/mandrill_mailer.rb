@@ -2,6 +2,7 @@ require 'action_view'
 require 'mandrill_mailer/railtie'
 require 'mandrill_mailer/mock'
 require 'mandrill_mailer/template_mailer'
+require 'mandrill_mailer/message_mailer'
 require 'mandrill_mailer/version'
 
 module MandrillMailer

@@ -98,15 +98,12 @@ require 'mandrill_mailer/core_mailer'
 
 module MandrillMailer
   class MessageMailer < MandrillMailer::CoreMailer
-    
-
     # Public: The name of the template to use
     attr_accessor :html
 
     # Public: Template content
     attr_accessor :text
 
-    
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
@@ -114,7 +111,6 @@ module MandrillMailer
       mandrill.messages.send(message, async, ip_pool, send_at)
     end
     
-
     # Public: Build the hash needed to send to the mandrill api
     #
     # args - The Hash options used to refine the selection:
@@ -145,16 +141,8 @@ module MandrillMailer
     #
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
     def mandrill_mail(args)
-
-      
-      
       # format the :to param to what Mandrill expects if a string or array is passed
       args[:to] = format_to_params(args[:to])
-
-      
-      # Set the template content
-      tc = args.delete(:template_content)
-      self.template_content = mandrill_args(tc) if tc.present?
 
       self.async = args.delete(:async)
       self.ip_pool = args.delete(:ip_pool)

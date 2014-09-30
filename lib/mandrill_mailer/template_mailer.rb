@@ -116,6 +116,7 @@ module MandrillMailer
       check_required_options(message)
       mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
+    
 
     # Public: Build the hash needed to send to the mandrill api
     #
@@ -159,6 +160,8 @@ module MandrillMailer
 
       # Set the template content
       self.template_content = mandrill_args(args.delete(:template_content))
+      
+      
       self.async = args.delete(:async)
       self.ip_pool = args.delete(:ip_pool)
 
@@ -216,7 +219,7 @@ module MandrillMailer
     end
 
     def check_required_options(options)
-      names = ['to', 'from', 'subject']
+      names = ['to', 'from_email', 'subject']
       
       names.each do |name|
         warn("Mandrill Mailer Warn: missing required option: #{name}") unless options.has_key?(name)

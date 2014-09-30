@@ -1,3 +1,6 @@
+# 0.4.9
+- [FEATURE] Added support for the Mandrill Messages api by adding a MandrillMailer::Messenger class. Thanks @arthurtalkgoal
+
 # 0.4.8
 - [IMPROVEMENT] Add a to= setter to the template mailer
 

@@ -104,23 +104,18 @@ require 'mandrill_mailer/core_mailer'
 module MandrillMailer
   class TemplateMailer < MandrillMailer::CoreMailer
 
-
-  
-
     # Public: The name of the template to use
     attr_accessor :template_name
 
     # Public: Template content
     attr_accessor :template_content
 
-    
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
       check_required_options(message)
       mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
-    
 
     # Public: Build the hash needed to send to the mandrill api
     #
@@ -164,11 +159,9 @@ module MandrillMailer
 
       # Set the template content
       self.template_content = mandrill_args(args.delete(:template_content))
-
-      
-      
       self.async = args.delete(:async)
       self.ip_pool = args.delete(:ip_pool)
+
       if args.has_key?(:send_at)
         self.send_at = args.delete(:send_at).getutc.strftime('%Y-%m-%d %H:%M:%S')
       end
@@ -222,8 +215,6 @@ module MandrillMailer
       }
     end
 
-    
-    
     def check_required_options(options)
       names = ['to', 'from', 'subject']
       

@@ -219,7 +219,7 @@ module MandrillMailer
     end
 
     def check_required_options(options)
-      names = ['to', 'from', 'subject']
+      names = ['to', 'from_email', 'subject']
       
       names.each do |name|
         warn("Mandrill Mailer Warn: missing required option: #{name}") unless options.has_key?(name)

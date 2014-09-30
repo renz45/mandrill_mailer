@@ -102,7 +102,6 @@ require 'base64'
 
 module MandrillMailer
   class CoreMailer
-    # include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
 
     class InvalidEmail < StandardError; end

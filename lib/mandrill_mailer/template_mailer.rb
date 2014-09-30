@@ -99,93 +99,13 @@
 
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
 require 'base64'
+require 'mandrill_mailer/core_mailer'
 
 module MandrillMailer
-  class TemplateMailer
-    # include Rails.application.routes.url_helpers
-    include ActionView::Helpers::NumberHelper
+  class TemplateMailer < MandrillMailer::CoreMailer
 
 
-    class InvalidEmail < StandardError; end
-    class InvalidMailerMethod < StandardError; end
-    class InvalidInterceptorParams < StandardError; end
-
-    # Public: Defaults for the mailer. Currently the only option is from:
-    #
-    # options - The Hash options used to refine the selection (default: {}):
-    #   :from - Default from email address
-    #
-    # Examples
-    #
-    #   default from: 'foo@bar.com'
-    #
-    # Returns options
-    def self.defaults
-      @defaults || super_defaults
-    end
-
-    def self.super_defaults
-      superclass.defaults if superclass.respond_to?(:defaults)
-    end
-
-    def self.default(args)
-      @defaults ||= {}
-      @defaults[:from] ||= 'example@email.com'
-      @defaults.merge!(args)
-    end
-    class << self
-      attr_writer :defaults
-    end
-
-    # Public: setup a way to test mailer methods
-    #
-    # mailer_method - Name of the mailer method the test setup is for
-    # 
-    # block - Block of code to execute to perform the test. The mailer
-    # and options are passed to the block. The options have to
-    # contain at least the :email to send the test to.
-    #
-    # Examples
-    #
-    #   test_setup_for :invite do |mailer, options|
-    #     invitation = OpenStruct.new({
-    #       email: options[:email],
-    #       owner_name: 'foobar',
-    #       secret: rand(9000000..1000000).to_s
-    #     })
-    #     mailer.invite(invitation).deliver
-    #   end
-    #
-    # Returns the duplicated String.
-    def self.test_setup_for(mailer_method, &block)
-      @mailer_methods ||= {}
-      @mailer_methods[mailer_method] = block
-    end
-
-    # Public: Executes a test email
-    #
-    # mailer_method - Method to execute
-    # 
-    # options - The Hash options used to refine the selection (default: {}):
-    #   :email - The email to send the test to.
-    #
-    # Examples
-    #
-    #   InvitationMailer.test(:invite, email: 'benny@envylabs.com')
-    #
-    # Returns the duplicated String.
-    def self.test(mailer_method, options={})
-      unless options[:email]
-        raise InvalidEmail.new 'Please specify a :email option(email to send the test to)'
-      end
-
-      if @mailer_methods[mailer_method]
-        @mailer_methods[mailer_method].call(self.new, options)
-      else
-        raise InvalidMailerMethod.new "The mailer method: #{mailer_method} does not have test setup"
-      end
-
-    end
+  
 
     # Public: The name of the template to use
     attr_accessor :template_name
@@ -193,34 +113,12 @@ module MandrillMailer
     # Public: Template content
     attr_accessor :template_content
 
-    # Public: Other information on the message to send
-    attr_accessor :message
-
-    # Public: Enable background sending mode
-    attr_accessor :async
-
-    # Public:  Name of the dedicated IP pool that should be used to send the message
-    attr_accessor :ip_pool
-
-    # Public: When message should be sent
-    attr_accessor :send_at
-
-    def is_template?
-      template_name.present? && template_content.present?
-    end
-
     
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
       check_required_options(message)
-      if is_template?
-        
-        mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
-      else
-        
-        mandrill.messages.send(message, async, ip_pool, send_at)
-      end
+      mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
     
 
@@ -255,23 +153,20 @@ module MandrillMailer
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
     def mandrill_mail(args)
 
-      # Set the template name
-      self.template_name = args.delete(:template)
-
-      
       # Mandrill requires template content to be there
-      if self.template_name.present?
-        args[:template_content] = {"blank" => ""} if args[:template_content].blank?
-      end
-      
+      args[:template_content] = {"blank" => ""} if args[:template_content].blank?
+
       # format the :to param to what Mandrill expects if a string or array is passed
       args[:to] = format_to_params(args[:to])
 
-      
-      # Set the template content
-      tc = args.delete(:template_content)
-      self.template_content = mandrill_args(tc) if tc.present?
+      # Set the template name
+      self.template_name = args.delete(:template)
 
+      # Set the template content
+      self.template_content = mandrill_args(args.delete(:template_content))
+
+      
+      
       self.async = args.delete(:async)
       self.ip_pool = args.delete(:ip_pool)
       if args.has_key?(:send_at)
@@ -303,7 +198,6 @@ module MandrillMailer
         "attachments" => mandrill_attachment_args(args[:attachments]),
         "images" => mandrill_images_args(args[:images])
       }
-      self.message.merge({'text' => args[:text], 'html' => args[:html], 'view_content_link' => args[:view_content_link]})
       unless MandrillMailer.config.interceptor_params.nil?
         unless MandrillMailer.config.interceptor_params.is_a?(Hash)
           raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
@@ -328,138 +222,11 @@ module MandrillMailer
       }
     end
 
-    def from
-      self.message && self.message['from_email']
-    end
-
-    def to
-      self.message && self.message['to']
-    end
-
-    def to=(values)
-      self.message && self.message['to'] = format_to_params(values)
-    end
-
-    def bcc
-      self.message && self.message['bcc_address']
-    end
-
-    protected
-
-    def mandrill_attachment_args(args)
-      return unless args
-      args.map do |attachment|
-        attachment.symbolize_keys!
-        type = attachment[:mimetype]
-        name = attachment[:filename]
-        file = attachment[:file]
-        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
-      end
-    end
-
-    def mandrill_images_args(args)
-      return unless args
-      args.map do |attachment|
-        attachment.symbolize_keys!
-        type = attachment[:mimetype]
-        name = attachment[:filename]
-        file = attachment[:file]
-        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
-      end
-    end
-
-    # Makes this class act as a singleton without it actually being a singleton
-    # This keeps the syntax the same as the orginal mailers so we can swap quickly if something
-    # goes wrong.
-    def self.method_missing(method, *args)
-      return super unless respond_to?(method)
-      new.method(method).call(*args)
-    end
-
-    def self.respond_to?(method, include_private = false)
-      super || instance_methods.include?(method.to_sym)
-    end
-
-    # Proxy route helpers to rails if Rails exists. Doing routes this way
-    # makes it so this gem doesn't need to be a rails engine
-    def method_missing(method, *args)
-      return super unless defined?(Rails) && Rails.application.routes.url_helpers.respond_to?(method)
-      # Check to see if one of the args is an open struct. If it is, we'll assume it's the
-      # test stub and try to call a path or url attribute.
-      if args.any? {|arg| arg.kind_of?(MandrillMailer::Mock)}
-        # take the first OpenStruct found in args and look for .url or.path
-        args.each do |arg|
-          if arg.kind_of?(MandrillMailer::Mock)
-            break arg.url || arg.path
-          end
-        end
-      else
-        options = args.extract_options!.merge({host: MandrillMailer.config.default_url_options[:host], protocol: MandrillMailer.config.default_url_options[:protocol]})
-        args << options
-        Rails.application.routes.url_helpers.method(method).call(*args)
-      end
-    end
-
-    def image_path(image)
-      if defined? Rails
-        ActionController::Base.helpers.asset_path(image)
-      else
-        method_missing(:image_path, image)
-      end
-    end
-
-    def image_url(image)
-      "#{root_url}#{image_path(image).split('/').reject!(&:empty?).join('/')}"
-    end
-
-    # convert a normal hash into the format mandrill needs
-    def mandrill_args(args)
-      return [] unless args
-      args.map do |k,v|
-        {'name' => k, 'content' => v}
-      end
-    end
-
-    def mandrill_rcpt_args(args)
-      return [] unless args
-      args.map do |item|
-        rcpt = item.keys[0]
-        {'rcpt' => rcpt, 'vars' => mandrill_args(item.fetch(rcpt))}
-      end
-    end
-
-    # ensure only true or false is returned given arg
-    def format_boolean(arg)
-      arg ? true : false
-    end
-
-    # handle if to params is an array of either hashes or strings or the single string
-    def format_to_params(to_params)
-      if to_params.kind_of? Array
-        to_params.map do |p|
-          to_params_item(p)
-        end
-      else
-        [to_params_item(to_params)]
-      end
-    end
-
-    # single to params item
-    def to_params_item(item)
-      return {"email" => item, "name" => item} unless item.kind_of? Hash
-      item
-    end
-
-    def api_key
-      MandrillMailer.config.api_key
-    end
+    
     
     def check_required_options(options)
-      if is_template?
-        names = ['to', 'from']
-      else 
-        names = ['text', 'html', 'from', 'subject', 'to']
-      end
+      names = ['to', 'from', 'subject']
+      
       names.each do |name|
         warn("Mandrill Mailer Warn: missing required option: #{name}") unless options.has_key?(name)
       end

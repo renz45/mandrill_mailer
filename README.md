@@ -160,7 +160,7 @@ end
 Sending a message without template is similar to sending a template one:
 
 ```ruby
-class InvitationMailer < MandrillMailer::TemplateMailer
+class InvitationMailer < MandrillMailer::MessageMailer
   default from: 'support@example.com'
 
   def invite(invitation)

@@ -105,10 +105,21 @@ module MandrillMailer
     # include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
 
-
     class InvalidEmail < StandardError; end
     class InvalidMailerMethod < StandardError; end
     class InvalidInterceptorParams < StandardError; end
+    
+    # Public: Other information on the message to send
+    attr_accessor :message
+
+    # Public: Enable background sending mode
+    attr_accessor :async
+
+    # Public:  Name of the dedicated IP pool that should be used to send the message
+    attr_accessor :ip_pool
+
+    # Public: When message should be sent
+    attr_accessor :send_at
 
     # Public: Defaults for the mailer. Currently the only option is from:
     #
@@ -133,6 +144,7 @@ module MandrillMailer
       @defaults[:from] ||= 'example@email.com'
       @defaults.merge!(args)
     end
+
     class << self
       attr_writer :defaults
     end
@@ -186,21 +198,6 @@ module MandrillMailer
       end
 
     end
-
-    # Public: Other information on the message to send
-    attr_accessor :message
-
-    # Public: Enable background sending mode
-    attr_accessor :async
-
-    # Public:  Name of the dedicated IP pool that should be used to send the message
-    attr_accessor :ip_pool
-
-    # Public: When message should be sent
-    attr_accessor :send_at
-
-
-
     
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
@@ -208,7 +205,6 @@ module MandrillMailer
       raise NotImplementedError.new(mesg)
     end
     
-
     # Public: Build the hash needed to send to the mandrill api
     #
     # args - The Hash options used to refine the selection:
@@ -225,7 +221,6 @@ module MandrillMailer
     #
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
     def mandrill_mail(args)
-
       mesg = "#{self.class.name}#mandrill_mail() is not implemented."
       raise NotImplementedError.new(mesg)
     end

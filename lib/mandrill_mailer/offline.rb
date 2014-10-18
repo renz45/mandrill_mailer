@@ -37,4 +37,16 @@ module MandrillMailer
       })
     end
   end
+  
+  class MessageMailer
+    def deliver
+
+      MandrillMailer.deliveries << MandrillMailer::Mock.new({
+        :message          => message,
+        :async            => async,
+        :ip_pool          => ip_pool,
+        :send_at          => send_at
+      })
+    end
+  end
 end

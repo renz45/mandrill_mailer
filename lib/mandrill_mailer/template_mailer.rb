@@ -160,6 +160,12 @@ module MandrillMailer
 
       # Set the template content
       self.template_content = mandrill_args(args.delete(:template_content))
+      self.async = args.delete(:async)
+      self.ip_pool = args.delete(:ip_pool)
+
+      if args.has_key?(:send_at)
+        self.send_at = args.delete(:send_at).getutc.strftime('%Y-%m-%d %H:%M:%S')
+      end
       
       
       self.async = args.delete(:async)
@@ -219,6 +225,7 @@ module MandrillMailer
     end
 
     def check_required_options(options)
+
       names = ['to', 'from_email', 'subject']
       
       names.each do |name|

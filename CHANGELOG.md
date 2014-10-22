@@ -1,4 +1,7 @@
 # 0.4.9
+- [FEATURE] Added offline support for the MandrillMailer::Messenger class. Thanks @arthurtalkgoal
+
+# 0.4.9
 - [FEATURE] Added support for the Mandrill Messages api by adding a MandrillMailer::Messenger class. Thanks @arthurtalkgoal
 
 # 0.4.8

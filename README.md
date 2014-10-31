@@ -321,6 +321,6 @@ Example:
 
 ```ruby
 MandrillMailer.configure do |config|
-  config.interceptor_params = { to: "emailtothatwillbeusedinall@emailssent.com" }
+  config.interceptor_params = { email: { to: "emailtothatwillbeusedinall@emailssent.com" } }
 end
 ```

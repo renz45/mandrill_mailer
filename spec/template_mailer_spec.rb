@@ -268,7 +268,7 @@ describe MandrillMailer::TemplateMailer do
     context "with interceptor" do
       before(:each) do
         @intercepted_params = {
-          to: { email: 'interceptedto@test.com', name: 'Mr. Interceptor' },
+          to: [{ email: 'interceptedto@test.com', name: 'Mr. Interceptor' }],
           tags: ['intercepted-tag'],
           bcc_address: 'interceptedbbc@email.com'
         }

@@ -107,7 +107,6 @@ module MandrillMailer
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
-      check_required_options(message)
       mandrill.messages.send(message, async, ip_pool, send_at)
     end
     
@@ -199,14 +198,6 @@ module MandrillMailer
         "ip_pool" => ip_pool,
         "send_at" => send_at
       }
-    end
-
-   
-    def check_required_options(options)
-      names = ['text', 'html', 'from', 'subject', 'to']
-      names.each do |name|
-        warn("Mandrill Mailer Warn: missing required option: #{name}") unless options.has_key?(name)
-      end
     end
   end
 end

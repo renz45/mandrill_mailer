@@ -157,7 +157,9 @@ end
    * `:send_at` - When this message should be sent
 
 ## Sending a message without template
-Sending a message without template is similar to sending a template one:
+Sending a message without template is similar to sending a one with a template. The biggest
+change is that you have to inherit from `MandrillMailer::MessageMailer` instead of the
+MandrillMailer::TemplateMailer class:
 
 ```ruby
 class InvitationMailer < MandrillMailer::MessageMailer

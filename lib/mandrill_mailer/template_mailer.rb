@@ -180,6 +180,7 @@ module MandrillMailer
         "url_strip_qs" => args.fetch(:url_strip_qs, true),
         "preserve_recipients" => args[:preserve_recipients],
         "bcc_address" => args[:bcc],
+        "merge_language" => args[:merge_language],
         "global_merge_vars" => mandrill_args(args[:vars]),
         "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
         "tags" => args[:tags],

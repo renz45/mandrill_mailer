@@ -1,6 +1,6 @@
-# Mandrill Mailer 
-[![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](rubygems.org/gems/mandrill_mailer) 
-[![Code Climate](http://img.shields.io/codeclimate/github/renz45/mandrill_mailer.svg)](https://codeclimate.com/github/renz45/mandrill_mailer) 
+# Mandrill Mailer
+[![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](rubygems.org/gems/mandrill_mailer)
+[![Code Climate](http://img.shields.io/codeclimate/github/renz45/mandrill_mailer.svg)](https://codeclimate.com/github/renz45/mandrill_mailer)
 [![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer)
 
 Inherit the MandrillMailer class in your existing Rails mailers to send transactional emails through Mandrill using their template-based emails.
@@ -47,7 +47,7 @@ You don't need to add the ActionMailer stuff unless you're still using ActionMai
 This uses the Mandrill SMTP servers. If you're using template-based emails
 through the Mandrill API you only need the `MandrillMailer.configure` portion.
 
-Do not forget to setup the environment (`ENV`) variables on your server instead 
+Do not forget to setup the environment (`ENV`) variables on your server instead
 of hardcoding your Mandrill username and password in the `mail.rb` initializer.
 
 You will also need to set `default_url_options` for the mailer, similar to ActionMailer
@@ -146,14 +146,14 @@ end
    * `:inline_css` - whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size.
 
    * `:attachments` - An array of file objects with the following keys:
-      * `file:` This is the actual file, it will be converted to byte data in the mailer
-      * `filename:` The name of the file
-      * `mimetype:` This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
+     * `content`: The file contents, must be a base64 encoded string
+     * `name`: The name of the file
+     * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc
 
    * `:images` - An array of embedded images to add to the message:
-      * `file:` This is the actual file, it will be converted to byte data in the mailer
-      * `filename:` The Content ID of the image - use `<img src="cid:THIS_VALUE">` to reference the image in your HTML content
-      * `mimetype:` The MIME type of the image - must start with "image/"
+     * `content`: The file contents, must be a base64 encoded string
+     * `name`: The name of the file
+     * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc etc
 
    * `:async` - Whether or not this message should be sent asynchronously
 
@@ -188,6 +188,13 @@ class InvitationMailer < MandrillMailer::MessageMailer
                   },
                   important: true,
                   inline_css: true,
+                  attachments: [
+                    {
+                      contents: Base64.encode64(File.read(File.expand_path('assets/offer.pdf'))),
+                      name: 'offer.pdf',
+                      type: 'application/pdf'
+                    }
+                  ],
                   recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array
                     { invitee.email =>
                       {

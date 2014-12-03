@@ -26,7 +26,7 @@
 #                                       }
 #                                     }
 #                                   end,
-#                   attachments: [{contents:Base64.encode64(File.read(File.expand_path('assets/some_image.png'))), name: 'MyImage.png', type: 'image/png'}],
+#                   attachments: [{content: Base64.encode64(File.read(File.expand_path('assets/some_image.png'))), name: 'MyImage.png', type: 'image/png'}],
 #                   important: true,
 #                   inline_css: true
 #   end

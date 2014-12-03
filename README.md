@@ -190,7 +190,7 @@ class InvitationMailer < MandrillMailer::MessageMailer
                   inline_css: true,
                   attachments: [
                     {
-                      contents: Base64.encode64(File.read(File.expand_path('assets/offer.pdf'))),
+                      content: Base64.encode64(File.read(File.expand_path('assets/offer.pdf'))),
                       name: 'offer.pdf',
                       type: 'application/pdf'
                     }

@@ -188,7 +188,13 @@ class InvitationMailer < MandrillMailer::MessageMailer
                   },
                   important: true,
                   inline_css: true,
-                  attachments: [{file: File.read(File.expand_path('assets/some_image.png')), filename: 'My Image.png', mimetype: 'image/png'}],
+                  attachments: [
+                    {
+                      file: File.read(File.expand_path('assets/some_image.png')), 
+                      filename: 'My Image.png', 
+                      mimetype: 'image/png'
+                    }
+                  ],
                   recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array
                     { invitee.email =>
                       {

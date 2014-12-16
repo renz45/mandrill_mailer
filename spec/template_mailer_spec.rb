@@ -58,8 +58,8 @@ describe MandrillMailer::TemplateMailer do
       url_strip_qs: false
     }
   end
-  
-  
+
+
   let(:message_args) do
     {
       text: "Example text content",
@@ -97,7 +97,7 @@ describe MandrillMailer::TemplateMailer do
     MandrillMailer.config.default_url_options = { host: default_host }
     #MandrillMailer.config.stub(:image_path).and_return(image_path)
     allow(MandrillMailer.config).to receive(:image_path).and_return(image_path)
-    
+
     MandrillMailer::TemplateMailer.default from: from_email, from_name: from_name
   end
 
@@ -215,7 +215,7 @@ describe MandrillMailer::TemplateMailer do
       expect(subject.template_name).to eq 'Email Template'
     end
 
-    
+
     it 'should set the template content' do
       expect(subject.template_content).to eq [{'name' => template_content_name, 'content' => template_content_content}]
     end
@@ -252,6 +252,7 @@ describe MandrillMailer::TemplateMailer do
           "url_strip_qs" => args[:url_strip_qs],
           "preserve_recipients" => false,
           "bcc_address" => args[:bcc],
+          "merge_language" => args[:merge_language],
           "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
           "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
           "tags" => args[:tags],
@@ -299,6 +300,7 @@ describe MandrillMailer::TemplateMailer do
           "url_strip_qs" => args[:url_strip_qs],
           "preserve_recipients" => false,
           "bcc_address" => @intercepted_params[:bcc_address],
+          "merge_language" => args[:merge_language],
           "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
           "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
           "tags" => @intercepted_params[:tags],
@@ -313,7 +315,7 @@ describe MandrillMailer::TemplateMailer do
     end
   end
 
-    
+
   describe 'url helpers in mailer' do
     subject { mailer.send(:course_url) }
 

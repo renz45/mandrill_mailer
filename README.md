@@ -146,14 +146,14 @@ end
    * `:inline_css` - whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size.
 
    * `:attachments` - An array of file objects with the following keys:
-     * `content`: The file contents, must be a base64 encoded string
-     * `name`: The name of the file
-     * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc
+     * `file`: This is the actual file, it will be converted to byte data in the mailer
+     * `filename`: The name of the file
+     * `mimetype`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc
 
    * `:images` - An array of embedded images to add to the message:
-     * `content`: The file contents, must be a base64 encoded string
-     * `name`: The name of the file
-     * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc etc
+     * `file`: This is the actual file, it will be converted to byte data in the mailer
+     * `filename`: The name of the file
+     * `mimetype`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc etc
 
    * `:async` - Whether or not this message should be sent asynchronously
 
@@ -190,9 +190,9 @@ class InvitationMailer < MandrillMailer::MessageMailer
                   inline_css: true,
                   attachments: [
                     {
-                      content: Base64.encode64(File.read(File.expand_path('assets/offer.pdf'))),
-                      name: 'offer.pdf',
-                      type: 'application/pdf'
+                      file: File.read(File.expand_path('assets/some_image.png')), 
+                      filename: 'My Image.png', 
+                      mimetype: 'image/png'
                     }
                   ],
                   recipient_vars: invitation.invitees.map do |invitee| # invitation.invitees is an Array

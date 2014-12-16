@@ -48,7 +48,7 @@
 #         'example@domain.com`
 #       2)
 #         { email: 'someone@email.com', name: 'Bob Bertly' }
-#       3) 
+#       3)
 #         [{ email: 'someone@email.com', name: 'Bob Bertly' },
 #          { email: 'other@email.com', name: 'Claire Nayo' }]
 #
@@ -107,7 +107,7 @@ module MandrillMailer
     class InvalidEmail < StandardError; end
     class InvalidMailerMethod < StandardError; end
     class InvalidInterceptorParams < StandardError; end
-    
+
     # Public: Other information on the message to send
     attr_accessor :message
 
@@ -151,7 +151,7 @@ module MandrillMailer
     # Public: setup a way to test mailer methods
     #
     # mailer_method - Name of the mailer method the test setup is for
-    # 
+    #
     # block - Block of code to execute to perform the test. The mailer
     # and options are passed to the block. The options have to
     # contain at least the :email to send the test to.
@@ -176,7 +176,7 @@ module MandrillMailer
     # Public: Executes a test email
     #
     # mailer_method - Method to execute
-    # 
+    #
     # options - The Hash options used to refine the selection (default: {}):
     #   :email - The email to send the test to.
     #
@@ -197,17 +197,17 @@ module MandrillMailer
       end
 
     end
-    
+
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mesg = "#{self.class.name}#deliver() is not implemented."
       raise NotImplementedError.new(mesg)
     end
-    
+
     # Public: Build the hash needed to send to the mandrill api
     #
     # args - The Hash options used to refine the selection:
-   
+
     # Examples
     #
     #   mandrill_mail template: 'Group Invite',
@@ -229,7 +229,7 @@ module MandrillMailer
       mesg = "#{self.class.name}#data() is not implemented."
       raise NotImplementedError.new(mesg)
     end
-    
+
     def check_required_options
       mesg = "#{self.class.name}#check_required_options() is not implemented."
       raise NotImplementedError.new(mesg)
@@ -257,22 +257,16 @@ module MandrillMailer
       return unless args
       args.map do |attachment|
         attachment.symbolize_keys!
-        type = attachment[:mimetype]
-        name = attachment[:filename]
-        file = attachment[:file]
+        type = attachment[:mimetype] || attachment[:type]
+        name = attachment[:filename] || attachment[:name]
+        file = attachment[:file] || attachment[:content]
         {"type" => type, "name" => name, "content" => Base64.encode64(file)}
       end
     end
 
     def mandrill_images_args(args)
       return unless args
-      args.map do |attachment|
-        attachment.symbolize_keys!
-        type = attachment[:mimetype]
-        name = attachment[:filename]
-        file = attachment[:file]
-        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
-      end
+      mandrill_attachment_args(args)
     end
 
     # Makes this class act as a singleton without it actually being a singleton
@@ -360,7 +354,5 @@ module MandrillMailer
     def api_key
       MandrillMailer.config.api_key
     end
-    
-    
   end
 end

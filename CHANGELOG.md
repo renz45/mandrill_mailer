@@ -1,3 +1,6 @@
+# 0.5.0
+- [IMPROVEMENT] Made the file attachment and image apis compatible with mandrill api doc syntax
+
 # 0.4.9
 - [FEATURE] Added offline support for the MandrillMailer::Messenger class. Thanks @arthurtalkgoal
 

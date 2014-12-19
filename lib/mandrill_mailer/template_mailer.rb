@@ -27,7 +27,7 @@
 #                                     }
 #                                   end,
 #                   template_content: {},
-#                   attachments: [{contents:Base64.encode64(File.read(File.expand_path('assets/some_image.png'))), name: 'MyImage.png', type: 'image/png'}],
+#                   attachments: [{contents: File.read(File.expand_path('assets/some_image.png')), name: 'MyImage.png', type: 'image/png'}],
 #                   important: true,
 #                   inline_css: true
 #   end
@@ -67,12 +67,12 @@
 #     these fields by passing a Hash {'header' => 'my email content'}
 
 #   :attachments - An array of file objects with the following keys:
-#       content: The file contents, must be a base64 encoded string
+#       content: The file contents, this will be encoded into a base64 string internally
 #       name: The name of the file
 #       type: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
 
 #   :images - An array of embedded images to add to the message:
-#       content: The file contents, must be a base64 encoded string
+#       content: The file contents, this will be encoded into a base64 string internally
 #       name: The name of the file
 #       type: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc
 

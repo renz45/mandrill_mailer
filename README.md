@@ -146,12 +146,12 @@ end
    * `:inline_css` - whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size.
 
    * `:attachments` - An array of file objects with the following keys:
-     * `content`: The file contents, must be a base64 encoded string
+     * `content`: The file contents, this will be encoded into a base64 string internally
      * `name`: The name of the file
      * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc
 
    * `:images` - An array of embedded images to add to the message:
-     * `content`: The file contents, must be a base64 encoded string
+     * `content`: The file contents, this will be encoded into a base64 string internally
      * `name`: The name of the file
      * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc etc
 
@@ -190,7 +190,7 @@ class InvitationMailer < MandrillMailer::MessageMailer
                   inline_css: true,
                   attachments: [
                     {
-                      content: Base64.encode64(File.read(File.expand_path('assets/offer.pdf'))),
+                      content: File.read(File.expand_path('assets/offer.pdf')),
                       name: 'offer.pdf',
                       type: 'application/pdf'
                     }

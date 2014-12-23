@@ -98,12 +98,13 @@
 #   message HTML - only for HTML documents less than 256KB in size
 
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
+
+# Required for hash.stringify_keys!
+require 'active_support/all'
 require 'base64'
 
 module MandrillMailer
   class CoreMailer
-    include ActionView::Helpers::NumberHelper
-
     class InvalidEmail < StandardError; end
     class InvalidMailerMethod < StandardError; end
     class InvalidInterceptorParams < StandardError; end

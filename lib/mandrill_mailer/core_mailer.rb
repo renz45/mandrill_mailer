@@ -4,7 +4,9 @@
 # Example usage:
 
 # class InvitationMailer < MandrillMailer::TemplateMailer
-#   default from: 'support@codeschool.com'
+#   default from: 'support@codeschool.com',
+#           from_name: 'Code School',
+#           merge_vars: { 'FOO' => 'Bar' }
 
 #   def invite(invitation)
 #     invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }
@@ -34,7 +36,9 @@
 # end
 
 # #default:
-#   :from - set the default from email address for the mailer
+#   :from       - set the default from email address for the mailer
+#   :from_name  - set the default from name for the mailer
+#   :merge_vars - set the default merge vars for the mailer
 
 # .mandrill_mail
 #   :template(required) - Template name from within Mandrill
@@ -123,12 +127,17 @@ module MandrillMailer
 
     # Public: Defaults for the mailer. Currently the only option is from:
     #
-    # options - The Hash options used to refine the selection (default: {}):
-    #   :from - Default from email address
+    # options       - The Hash options used to refine the selection (default: {}):
+    #   :from       - Default from email address
+    #   :from_name  - Default from name
+    #   :merge_vars - Default merge vars
     #
     # Examples
     #
-    #   default from: 'foo@bar.com'
+    #   default from: 'foo@bar.com',
+    #           from_name: 'Foo Bar',
+    #           merge_vars: {'FOO' => 'Bar'}
+    #
     #
     # Returns options
     def self.defaults
@@ -316,6 +325,8 @@ module MandrillMailer
 
     # convert a normal hash into the format mandrill needs
     def mandrill_args(args)
+      args = merge_default_merge_vars(args)
+
       return [] unless args
       args.map do |k,v|
         {'name' => k, 'content' => v}
@@ -326,8 +337,12 @@ module MandrillMailer
       return [] unless args
       args.map do |item|
         rcpt = item.keys[0]
-        {'rcpt' => rcpt, 'vars' => mandrill_args(item.fetch(rcpt))}
+        { 'rcpt' => rcpt, 'vars' => mandrill_args(item.fetch(rcpt)) }
       end
+    end
+
+    def merge_default_merge_vars(args)
+      self.class.defaults[:merge_vars].merge(args)
     end
 
     # ensure only true or false is returned given arg

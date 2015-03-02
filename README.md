@@ -174,7 +174,7 @@ class InvitationMailer < MandrillMailer::MessageMailer
     # in this example `invitation.invitees` is an Array
     invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }
 
-    # no need to set up tempalte and template_content attributes, set up the html and text directly
+    # no need to set up template and template_content attributes, set up the html and text directly
     mandrill_mail subject: I18n.t('invitation_mailer.invite.subject'),
                   to: invitees,
                   # to: invitation.email,

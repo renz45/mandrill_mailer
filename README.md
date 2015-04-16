@@ -318,7 +318,7 @@ end
 UpdateEmailJob.perform_async(<user_id>)
 ```
 
-Or depending on how up to date things are, try adding the following to to `config/initializers/mandrill_mailer_sidekiq.rb`
+Or depending on how up to date things are, try adding the following to `config/initializers/mandrill_mailer_sidekiq.rb`
 
 ```ruby
 ::MandrillMailer::TemplateMailer.extend(Sidekiq::Extensions::ActionMailer)

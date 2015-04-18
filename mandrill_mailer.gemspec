@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activesupport'
   s.add_dependency 'actionpack'
-  s.add_runtime_dependency 'mandrill-api', '~> 1.0.9'
+  s.add_runtime_dependency 'mandrill-api', '>= 1.0.9'
 
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rspec'

@@ -1,3 +1,7 @@
+# 0.5.2
+- [IMPROVEMENT] Allow the mandrill api gem to be more flexible in the accepted version
+  which allows for the json gem to be updated internally.
+
 # 0.5.0
 - [IMPROVEMENT] Made the file attachment and image apis compatible with mandrill api doc syntax
 

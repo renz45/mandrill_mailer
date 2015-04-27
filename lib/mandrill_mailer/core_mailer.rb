@@ -133,7 +133,7 @@ module MandrillMailer
     #
     # Returns options
     def self.defaults
-      @defaults || super_defaults
+      @defaults || super_defaults || {}
     end
 
     def self.super_defaults

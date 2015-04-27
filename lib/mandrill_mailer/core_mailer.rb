@@ -316,17 +316,21 @@ module MandrillMailer
     end
 
     # convert a normal hash into the format mandrill needs
-    end
-
-    end
-
-
-      end
-    end
-
-
     def api_key
       MandrillMailer.config.api_key
+    end
+
+    def mandrill_api
+      @mandrill_api ||= Mandrill::API.new(api_key)
+    end
+
+    def extract_api_options!(args)
+      self.async = args.delete(:async)
+      self.ip_pool = args.delete(:ip_pool)
+
+      if args.has_key?(:send_at)
+        self.send_at = args.delete(:send_at).getutc.strftime('%Y-%m-%d %H:%M:%S')
+      end
     end
   end
 end

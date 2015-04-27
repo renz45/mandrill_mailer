@@ -1,3 +1,5 @@
+# TODO Update these docs
+
 # MandrilMailer class for sending transactional emails through mandril.
 # Only template based emails are supported at this time.
 
@@ -93,7 +95,6 @@
 #   message HTML - only for HTML documents less than 256KB in size
 
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
-require 'base64'
 require 'mandrill_mailer/core_mailer'
 
 module MandrillMailer

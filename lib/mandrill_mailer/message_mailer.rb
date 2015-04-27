@@ -98,106 +98,12 @@ require 'mandrill_mailer/core_mailer'
 
 module MandrillMailer
   class MessageMailer < MandrillMailer::CoreMailer
-    # Public: The name of the template to use
-    attr_accessor :html
-
-    # Public: Template content
-    attr_accessor :text
-
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
       mandrill = Mandrill::API.new(api_key)
       mandrill.messages.send(message, async, ip_pool, send_at)
     end
 
-    # Public: Build the hash needed to send to the mandrill api
-    #
-    # args - The Hash options used to refine the selection:
-    #             :template - Template name in Mandrill
-    #             :subject - Subject of the email
-    #             :to - Email to send the mandrill email to
-    #             :vars - Global merge vars used in the email for dynamic data
-    #             :recipient_vars - Merge vars used in the email for recipient-specific dynamic data
-    #             :bcc - bcc email for the mandrill email
-    #             :tags - Tags for the email
-    #             :google_analytics_domains - Google analytics domains
-    #             :google_analytics_campaign - Google analytics campaign
-    #             :inline_css - whether or not to automatically inline all CSS styles provided in the message HTML
-    #             :important - whether or not this message is important
-    #             :async - whether or not this message should be sent asynchronously
-    #             :ip_pool - name of the dedicated IP pool that should be used to send the message
-    #             :send_at - when this message should be sent
-    #
-    # Examples
-    #
-    #   mandrill_mail template: 'Group Invite',
-    #               subject: I18n.t('invitation_mailer.invite.subject'),
-    #               to: invitation.email,
-    #               vars: {
-    #                 'OWNER_NAME' => invitation.owner_name,
-    #                 'INVITATION_URL' => new_invitation_url(email: invitation.email, secret: invitation.secret)
-    #               }
-    #
-    # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
-    def mandrill_mail(args)
-      # format the :to param to what Mandrill expects if a string or array is passed
-      args[:to] = format_to_params(args[:to])
-
-      self.async = args.delete(:async)
-      self.ip_pool = args.delete(:ip_pool)
-      if args.has_key?(:send_at)
-        self.send_at = args.delete(:send_at).getutc.strftime('%Y-%m-%d %H:%M:%S')
-      end
-
-      # Construct message hash
-      self.message = {
-        "text" => args[:text],
-        "html" => args[:html],
-        "view_content_link" => args[:view_content_link],
-        "subject" => args[:subject],
-        "from_email" => args[:from] || self.class.defaults[:from],
-        "from_name" => args[:from_name] || self.class.defaults[:from_name] || self.class.defaults[:from],
-        "to" => args[:to],
-        "headers" => args[:headers],
-        "important" => args[:important],
-        "track_opens" => args.fetch(:track_opens, true),
-        "track_clicks" => args.fetch(:track_clicks, true),
-        "auto_text" => true,
-        "inline_css" => args[:inline_css],
-        "url_strip_qs" => args.fetch(:url_strip_qs, true),
-        "preserve_recipients" => args[:preserve_recipients],
-        "bcc_address" => args[:bcc],
-        "global_merge_vars" => mandrill_args(args[:vars]),
-        "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
-        "tags" => args[:tags],
-        "subaccount" => args[:subaccount],
-        "google_analytics_domains" => args[:google_analytics_domains],
-        "google_analytics_campaign" => args[:google_analytics_campaign],
-        "metadata" => args[:metadata],
-        "attachments" => mandrill_attachment_args(args[:attachments]),
-        "images" => mandrill_images_args(args[:images])
-      }
-
-      unless MandrillMailer.config.interceptor_params.nil?
-        unless MandrillMailer.config.interceptor_params.is_a?(Hash)
-          raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
-        end
-        self.message.merge!(MandrillMailer.config.interceptor_params.stringify_keys)
-      end
-
-      # return self so we can chain deliver after the method call, like a normal mailer.
-      return self
-    end
-
-    # Public: Data hash (deprecated)
-    def data
-      {
-        "key" => api_key,
-        "message" => message,
-        "async" => async,
-        "ip_pool" => ip_pool,
-        "send_at" => send_at
-      }
     end
   end
 end

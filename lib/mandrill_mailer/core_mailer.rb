@@ -315,42 +315,14 @@ module MandrillMailer
     end
 
     # convert a normal hash into the format mandrill needs
-    def mandrill_args(args)
-      return [] unless args
-      args.map do |k,v|
-        {'name' => k, 'content' => v}
+    end
+
+    end
+
+
       end
     end
 
-    def mandrill_rcpt_args(args)
-      return [] unless args
-      args.map do |item|
-        rcpt = item.keys[0]
-        {'rcpt' => rcpt, 'vars' => mandrill_args(item.fetch(rcpt))}
-      end
-    end
-
-    # ensure only true or false is returned given arg
-    def format_boolean(arg)
-      arg ? true : false
-    end
-
-    # handle if to params is an array of either hashes or strings or the single string
-    def format_to_params(to_params)
-      if to_params.kind_of? Array
-        to_params.map do |p|
-          to_params_item(p)
-        end
-      else
-        [to_params_item(to_params)]
-      end
-    end
-
-    # single to params item
-    def to_params_item(item)
-      return {"email" => item, "name" => item} unless item.kind_of? Hash
-      item
-    end
 
     def api_key
       MandrillMailer.config.api_key

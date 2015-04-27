@@ -1,5 +1,7 @@
 require 'rspec'
 require 'mandrill_mailer'
+require "mandrill"
+
 require 'pry'
 
 # Requires supporting files with custom matchers and macros, etc,

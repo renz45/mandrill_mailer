@@ -100,6 +100,7 @@
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
 require 'base64'
 require 'mandrill_mailer/core_mailer'
+require 'mandrill_mailer/arg_formatter'
 
 module MandrillMailer
   class TemplateMailer < MandrillMailer::CoreMailer
@@ -156,63 +157,7 @@ module MandrillMailer
       # Set the template name
       self.template_name = args.delete(:template)
 
-      # Set the template content
-      self.template_content = mandrill_args(args.delete(:template_content))
-      self.async = args.delete(:async)
-      self.ip_pool = args.delete(:ip_pool)
-
-      if args.has_key?(:send_at)
-        self.send_at = args.delete(:send_at).getutc.strftime('%Y-%m-%d %H:%M:%S')
-      end
-
-      # Construct message hash
-      self.message = {
-        "subject" => args[:subject],
-        "from_email" => args[:from] || self.class.defaults[:from],
-        "from_name" => args[:from_name] || self.class.defaults[:from_name] || self.class.defaults[:from],
-        "to" => args[:to],
-        "headers" => args[:headers],
-        "important" => args[:important],
-        "track_opens" => args.fetch(:track_opens, true),
-        "track_clicks" => args.fetch(:track_clicks, true),
-        "auto_text" => true,
-        "inline_css" => args[:inline_css],
-        "url_strip_qs" => args.fetch(:url_strip_qs, true),
-        "preserve_recipients" => args[:preserve_recipients],
-        "bcc_address" => args[:bcc],
-        "merge_language" => args[:merge_language],
-        "global_merge_vars" => mandrill_args(args[:vars]),
-        "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
-        "tags" => args[:tags],
-        "subaccount" => args[:subaccount],
-        "google_analytics_domains" => args[:google_analytics_domains],
-        "google_analytics_campaign" => args[:google_analytics_campaign],
-        "metadata" => args[:metadata],
-        "attachments" => mandrill_attachment_args(args[:attachments]),
-        "images" => mandrill_images_args(args[:images])
-      }
-      unless MandrillMailer.config.interceptor_params.nil?
-        unless MandrillMailer.config.interceptor_params.is_a?(Hash)
-          raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
-        end
-        self.message.merge!(MandrillMailer.config.interceptor_params.stringify_keys)
-      end
-
-      # return self so we can chain deliver after the method call, like a normal mailer.
       return self
-    end
-
-    # Public: Data hash (deprecated)
-    def data
-      {
-        "key" => api_key,
-        "template_name" => template_name,
-        "template_content" => template_content,
-        "message" => message,
-        "async" => async,
-        "ip_pool" => ip_pool,
-        "send_at" => send_at
-      }
     end
   end
 end

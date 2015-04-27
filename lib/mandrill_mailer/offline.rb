@@ -37,9 +37,9 @@ module MandrillMailer
       })
     end
   end
+
   class MessageMailer
     def deliver
-
       MandrillMailer.deliveries << MandrillMailer::Mock.new({
         :message          => message,
         :async            => async,
@@ -47,5 +47,5 @@ module MandrillMailer
         :send_at          => send_at
       })
     end
-  end  
+  end
 end

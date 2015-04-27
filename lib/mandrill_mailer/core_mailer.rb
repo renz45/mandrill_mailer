@@ -202,14 +202,18 @@ module MandrillMailer
 
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
-      mesg = "#{self.class.name}#deliver() is not implemented."
-      raise NotImplementedError.new(mesg)
+      raise NotImplementedError.new("#{self.class.name}#deliver is not implemented.")
+    end
+
+
+    def mandrill_mail_handler(args)
+      args
     end
 
     # Public: Build the hash needed to send to the mandrill api
     #
     # args - The Hash options used to refine the selection:
-
+    #
     # Examples
     #
     #   mandrill_mail template: 'Group Invite',
@@ -222,19 +226,19 @@ module MandrillMailer
     #
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
     def mandrill_mail(args)
-      mesg = "#{self.class.name}#mandrill_mail() is not implemented."
-      raise NotImplementedError.new(mesg)
-    end
+      extract_api_options!(args)
 
-    # Public: Data hash (deprecated)
-    def data
-      mesg = "#{self.class.name}#data() is not implemented."
-      raise NotImplementedError.new(mesg)
-    end
+      # Call the mandrill_mail_handler so mailers can handle the args in custom ways
+      mandrill_mail_handler(args)
 
-    def check_required_options
-      mesg = "#{self.class.name}#check_required_options() is not implemented."
-      raise NotImplementedError.new(mesg)
+      # Construct message hash
+      self.message = MandrillMailer::ArgFormatter.format_messages_api_message_data(args)
+
+      # Apply any interceptors that may be present
+      apply_interceptors!(self.message)
+
+      # return self so we can chain deliver after the method call, like a normal mailer.
+      self
     end
 
     def from
@@ -246,7 +250,7 @@ module MandrillMailer
     end
 
     def to=(values)
-      self.message && self.message['to'] = format_to_params(values)
+      self.message && self.message['to'] = MandrillMailer::ArgFormatter.params(values)
     end
 
     def bcc
@@ -255,20 +259,15 @@ module MandrillMailer
 
     protected
 
-    def mandrill_attachment_args(args)
-      return unless args
-      args.map do |attachment|
-        attachment.symbolize_keys!
-        type = attachment[:mimetype] || attachment[:type]
-        name = attachment[:filename] || attachment[:name]
-        file = attachment[:file] || attachment[:content]
-        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
+    def apply_interceptors!(obj)
+      unless MandrillMailer.config.interceptor_params.nil?
+        unless MandrillMailer.config.interceptor_params.is_a?(Hash)
+          raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
+        end
+        obj.merge!(MandrillMailer.config.interceptor_params.stringify_keys)
       end
-    end
 
-    def mandrill_images_args(args)
-      return unless args
-      mandrill_attachment_args(args)
+      obj
     end
 
     # Makes this class act as a singleton without it actually being a singleton
@@ -315,7 +314,6 @@ module MandrillMailer
       "#{root_url}#{image_path(image).split('/').reject!(&:empty?).join('/')}"
     end
 
-    # convert a normal hash into the format mandrill needs
     def api_key
       MandrillMailer.config.api_key
     end

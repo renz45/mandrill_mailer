@@ -113,8 +113,7 @@ module MandrillMailer
 
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver
-      mandrill = Mandrill::API.new(api_key)
-      mandrill.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
+      mandrill_api.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
 
     # Public: Build the hash needed to send to the mandrill api
@@ -146,13 +145,12 @@ module MandrillMailer
     #               }
     #
     # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
-    def mandrill_mail(args)
+    def mandrill_mail_handler(args)
+      # Mandrill requires template content to be there, set default value
+      args[:template_content] =  {"blank" => ""} if args[:template_content].blank?
 
-      # Mandrill requires template content to be there
-      args[:template_content] = {"blank" => ""} if args[:template_content].blank?
-
-      # format the :to param to what Mandrill expects if a string or array is passed
-      args[:to] = format_to_params(args[:to])
+      # Set the template content
+      self.template_content = MandrillMailer::ArgFormatter.mandrill_args(args.delete(:template_content))
 
       # Set the template name
       self.template_name = args.delete(:template)

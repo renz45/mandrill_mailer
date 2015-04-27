@@ -101,13 +101,14 @@
 
 # Required for hash.stringify_keys!
 require 'active_support/all'
-require 'base64'
+require 'mandrill_mailer/arg_formatter'
 
 module MandrillMailer
   class CoreMailer
     class InvalidEmail < StandardError; end
     class InvalidMailerMethod < StandardError; end
     class InvalidInterceptorParams < StandardError; end
+    class InvalidMergeLanguageError < StandardError; end
 
     # Public: Other information on the message to send
     attr_accessor :message

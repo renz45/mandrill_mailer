@@ -27,25 +27,29 @@ module MandrillMailer
 
   class TemplateMailer
     def deliver
-      MandrillMailer.deliveries << MandrillMailer::Mock.new({
+      MandrillMailer::Mock.new({
         :template_name    => template_name,
         :template_content => template_content,
         :message          => message,
         :async            => async,
         :ip_pool          => ip_pool,
         :send_at          => send_at
-      })
+      }).tap do |mock|
+         MandrillMailer.deliveries << mock
+      end
     end
   end
   class MessageMailer
     def deliver
 
-      MandrillMailer.deliveries << MandrillMailer::Mock.new({
+      MandrillMailer::Mock.new({
         :message          => message,
         :async            => async,
         :ip_pool          => ip_pool,
         :send_at          => send_at
-      })
+      }).tap do |mock|
+         MandrillMailer.deliveries << mock
+      end
     end
-  end  
+  end
 end

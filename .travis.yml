@@ -1,0 +1,15 @@
+language: ruby
+sudo: false
+cache: bundler
+rvm:
+  - 2.0.0-p598
+  - 2.1.0
+  - 2.2.0
+
+script:
+  - bundle exec rspec spec/
+branches:
+  only:
+    - master
+notifications:
+  email: false

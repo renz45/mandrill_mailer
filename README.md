@@ -1,7 +1,7 @@
 # Mandrill Mailer
-[![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](rubygems.org/gems/mandrill_mailer)
+[![Build Status](https://travis-ci.org/renz45/mandrill_mailer.svg)](https://travis-ci.org/renz45/mandrill_mailer) [![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](rubygems.org/gems/mandrill_mailer)
 [![Code Climate](http://img.shields.io/codeclimate/github/renz45/mandrill_mailer.svg)](https://codeclimate.com/github/renz45/mandrill_mailer)
-[![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer)
+[![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer) [![Inline Documentation](http://inch-ci.org/github/renz45/mandrill_mailer.svg?branch=master)](http://inch-ci.org/github/renz45/mandrill_mailer)
 
 Inherit the MandrillMailer class in your existing Rails mailers to send transactional emails through Mandrill using their template-based emails.
 
@@ -174,7 +174,7 @@ class InvitationMailer < MandrillMailer::MessageMailer
     # in this example `invitation.invitees` is an Array
     invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }
 
-    # no need to set up tempalte and template_content attributes, set up the html and text directly
+    # no need to set up template and template_content attributes, set up the html and text directly
     mandrill_mail subject: I18n.t('invitation_mailer.invite.subject'),
                   to: invitees,
                   # to: invitation.email,
@@ -318,7 +318,7 @@ end
 UpdateEmailJob.perform_async(<user_id>)
 ```
 
-Or depending on how up to date things are, try adding the following to to `config/initializers/mandrill_mailer_sidekiq.rb`
+Or depending on how up to date things are, try adding the following to `config/initializers/mandrill_mailer_sidekiq.rb`
 
 ```ruby
 ::MandrillMailer::TemplateMailer.extend(Sidekiq::Extensions::ActionMailer)

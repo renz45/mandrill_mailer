@@ -360,35 +360,39 @@ describe MandrillMailer::TemplateMailer do
   describe 'defaults' do
     it 'should not share between different subclasses' do
       klassA = Class.new(MandrillMailer::TemplateMailer) do
-        default from_name: 'ClassA'
+        default from_name: 'ClassA', merge_vars: { 'FOO' => 'Bar' }
       end
       klassB = Class.new(MandrillMailer::TemplateMailer) do
         default from_name: 'ClassB'
       end
 
       expect(klassA.mandrill_mail({vars: {}}).message['from_name']).to eq 'ClassA'
+      expect(klassA.mandrill_mail({vars: {}}).message['global_merge_vars']).to include({"name"=>"FOO", "content"=>"Bar"})
       expect(klassB.mandrill_mail({vars: {}}).message['from_name']).to eq 'ClassB'
+      expect(klassB.mandrill_mail({vars: {}}).message['global_merge_vars']).to_not include({"name"=>"FOO", "content"=>"Bar"})
     end
 
     it 'should use defaults from the parent class' do
       klassA = Class.new(MandrillMailer::TemplateMailer) do
-        default from_name: 'ClassA'
+        default from_name: 'ClassA', merge_vars: { 'FOO' => 'Bar' }
       end
       klassB = Class.new(klassA) do
       end
 
-      expect(klassB.mandrill_mail({vars:{}}).message['from_name']).to eq 'ClassA'
+      expect(klassB.mandrill_mail({vars: {}}).message['from_name']).to eq 'ClassA'
+      expect(klassB.mandrill_mail({vars: {}}).message['global_merge_vars']).to include({"name"=>"FOO", "content"=>"Bar"})
     end
 
     it 'should allow overriding defaults from the parent' do
       klassA = Class.new(MandrillMailer::TemplateMailer) do
-        default from_name: 'ClassA'
+        default from_name: 'ClassA', merge_vars: { 'FOO' => 'Bar' }
       end
       klassB = Class.new(klassA) do
-        default from_name: 'ClassB'
+        default from_name: 'ClassB', merge_vars: { 'FOO' => 'Boo' }
       end
 
-      expect(klassB.mandrill_mail({vars:{}}).message['from_name']).to eq 'ClassB'
+      expect(klassB.mandrill_mail({vars: {}}).message['from_name']).to eq 'ClassB'
+      expect(klassB.mandrill_mail({vars: {}}).message['global_merge_vars']).to include({"name"=>"FOO", "content"=>"Boo"})
     end
   end
 

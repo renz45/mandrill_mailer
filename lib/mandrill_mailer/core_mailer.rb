@@ -151,6 +151,7 @@ module MandrillMailer
     def self.default(args)
       @defaults ||= {}
       @defaults[:from] ||= 'example@email.com'
+      @defaults[:merge_vars] ||= {}
       @defaults.merge!(args)
     end
 

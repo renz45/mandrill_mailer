@@ -168,7 +168,7 @@ module MandrillMailer
         "preserve_recipients" => args[:preserve_recipients],
         "bcc_address" => args[:bcc],
         "global_merge_vars" => mandrill_args(args[:vars]),
-        "merge_vars" => mandrill_rcpt_args(args[:recipient_vars]),
+        "merge_vars" => mandrill_rcpt_args(args[:recipient_vars] || self.class.defaults[:merge_vars]),
         "tags" => args[:tags],
         "subaccount" => args[:subaccount],
         "google_analytics_domains" => args[:google_analytics_domains],

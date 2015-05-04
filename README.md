@@ -99,6 +99,7 @@ end
 * `#default:`
   * `:from` - set the default from email address for the mailer
   * `:from_name` - set the default from name for the mailer. If not set, defaults to from email address. Setting :from_name in the .mandrill_mail overrides the default.
+  * `:merge_vars` - set some default `merge_vars` that will be sent with every mailer method (in `global_merge_vars` so there's no risk of collision with method-specific `merge_vars`.
 
 * `.mandrill_mail`
    * `:template`(required) - Template slug from within Mandrill (for backwards-compatibility, the template name may also be used but the immutable slug is preferred)

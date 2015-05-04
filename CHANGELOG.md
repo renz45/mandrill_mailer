@@ -1,3 +1,10 @@
+# 0.6.0
+- [IMPROVEMENT] Allow for default `merge_vars` to be set on the mailer class so that every method inherits them, just like the existing default `from` and `from_name`.
+
+# 0.5.2
+- [IMPROVEMENT] Allow the mandrill api gem to be more flexible in the accepted version
+  which allows for the json gem to be updated internally.
+
 # 0.5.2
 - [IMPROVEMENT] Allow the mandrill api gem to be more flexible in the accepted version
   which allows for the json gem to be updated internally.

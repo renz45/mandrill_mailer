@@ -343,7 +343,11 @@ module MandrillMailer
     end
 
     def merge_default_merge_vars(args)
-      self.class.defaults[:merge_vars].merge(args)
+      if args
+        self.class.defaults[:merge_vars].merge(args)
+      else
+        self.class.defaults[:merge_vars]
+      end
     end
 
     # ensure only true or false is returned given arg

@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## 0.6.1
+### Fixed
+- Correct a regression introduced in 0.6.0 that caused a TypeError exception
+when no `merge_vars` were provided as arguments to `mandrill_mail`.
+
 ## 0.6.0
 ### Changed
 - Allow for default `merge_vars` to be set on the mailer class so that every method inherits them, just like the existing default `from` and `from_name`.

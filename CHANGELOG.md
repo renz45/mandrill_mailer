@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased][unreleased]
+## 1.0.0
+- Update manrill_api gem to 1.0.X
+- Change how interceptors work to be more flexible and not overwrite data if needed
+- Make both the template and message mailers compatible with all available attributes in the messages api
 
 ## 0.6.1
 ### Fixed

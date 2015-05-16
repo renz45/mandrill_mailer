@@ -24,6 +24,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'mandrill-api', '~> 1.0.9'
 
 end

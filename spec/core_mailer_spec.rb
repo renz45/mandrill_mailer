@@ -94,6 +94,24 @@ describe MandrillMailer::CoreMailer do
       expect(mailer).to receive(:extract_api_options!).with(args)
       mailer.mandrill_mail(args)
     end
+
+    describe "vars attribute" do
+      it "returns the vars" do
+        mailer.mandrill_mail(args)
+        expect(mailer.message["global_merge_vars"].first.values).to include(var_name)
+        expect(mailer.message["global_merge_vars"].first.values).to include(var_content)
+      end
+
+      context "when no vars are set" do
+        before do
+          args.delete(:vars)
+        end
+
+        it "doesn't explode" do
+          expect { mailer.mandrill_mail(args) }.not_to raise_error
+        end
+      end
+    end
   end
 
   describe 'url helpers in mailer' do
@@ -267,6 +285,11 @@ describe MandrillMailer::CoreMailer do
   end
 
   describe "protected#apply_interceptors!" do
+    # Clear the interceptor after these tests so we don't get errors elsewhere
+    after do
+      MandrillMailer.config.interceptor = nil
+    end
+
     context "when interceptor config is a proc" do
       let(:original_email) { "blah@email.com" }
       let(:interceptor_email) { "intercept@email.com" }

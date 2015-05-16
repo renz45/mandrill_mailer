@@ -1,5 +1,3 @@
-# TODO Update these docs
-
 # MandrilMailer class for sending transactional emails through mandril.
 # Only template based emails are supported at this time.
 
@@ -100,7 +98,6 @@
 #   message HTML - only for HTML documents less than 256KB in size
 
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
-require 'base64'
 require 'mandrill_mailer/core_mailer'
 require 'mandrill_mailer/arg_formatter'
 
@@ -118,35 +115,7 @@ module MandrillMailer
       mandrill_api.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
 
-    # Public: Build the hash needed to send to the mandrill api
-    #
-    # args - The Hash options used to refine the selection:
-    #             :template - Template name in Mandrill
-    #             :subject - Subject of the email
-    #             :to - Email to send the mandrill email to
-    #             :vars - Global merge vars used in the email for dynamic data
-    #             :recipient_vars - Merge vars used in the email for recipient-specific dynamic data
-    #             :bcc - bcc email for the mandrill email
-    #             :tags - Tags for the email
-    #             :google_analytics_domains - Google analytics domains
-    #             :google_analytics_campaign - Google analytics campaign
-    #             :inline_css - whether or not to automatically inline all CSS styles provided in the message HTML
-    #             :important - whether or not this message is important
-    #             :async - whether or not this message should be sent asynchronously
-    #             :ip_pool - name of the dedicated IP pool that should be used to send the message
-    #             :send_at - when this message should be sent
-    #
-    # Examples
-    #
-    #   mandrill_mail template: 'Group Invite',
-    #               subject: I18n.t('invitation_mailer.invite.subject'),
-    #               to: invitation.email,
-    #               vars: {
-    #                 'OWNER_NAME' => invitation.owner_name,
-    #                 'INVITATION_URL' => new_invitation_url(email: invitation.email, secret: invitation.secret)
-    #               }
-    #
-    # Returns the the mandrill mailer class (this is so you can chain #deliver like a normal mailer)
+    # Handle template mailer specifics before formating the given args
     def mandrill_mail_handler(args)
       # Mandrill requires template content to be there, set default value
       args[:template_content] =  {"blank" => ""} if args[:template_content].blank?
@@ -156,8 +125,6 @@ module MandrillMailer
 
       # Set the template name
       self.template_name = args.delete(:template)
-
-      return self
     end
   end
 end

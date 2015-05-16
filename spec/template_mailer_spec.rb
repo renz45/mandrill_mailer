@@ -20,16 +20,14 @@ describe MandrillMailer::TemplateMailer do
 
   describe '#mandrill_mail_handler' do
     it 'should set the template name' do
-      results = mailer.mandrill_mail_handler(args)
-      expect(results.template_name).to eq 'Email Template'
+      mailer.mandrill_mail_handler(args)
+      expect(mailer.template_name).to eq 'Email Template'
     end
 
     it 'should set the template content' do
-      results = mailer.mandrill_mail_handler(args)
-      expect(results.template_content).to eq [{'name' => template_content_name, 'content' => template_content_content}]
+      mailer.mandrill_mail_handler(args)
+      expect(mailer.template_content).to eq [{'name' => template_content_name, 'content' => template_content_content}]
     end
-
-    it "Adds the messages data"
   end
 
   describe "#deliver" do

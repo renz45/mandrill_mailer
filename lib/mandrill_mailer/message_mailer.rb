@@ -1,8 +1,4 @@
-# TODO Update these docs
-
 # MandrilMailer class for sending transactional emails through mandril.
-# Only template based emails are supported at this time.
-
 # Example usage:
 
 # class InvitationMailer < MandrillMailer::MessageMailer

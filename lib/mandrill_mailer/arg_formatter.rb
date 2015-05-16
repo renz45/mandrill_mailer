@@ -100,7 +100,7 @@ module MandrillMailer
         "merge" => boolean(args[:merge]),
         "merge_language" => args[:merge_language],
         "global_merge_vars" => mandrill_args(args[:vars] || args[:global_merge_vars]),
-        "merge_vars" => merge_vars(args[:recipient_vars] || args[:merge_vars]),
+        "merge_vars" => merge_vars(args[:recipient_vars] || args[:merge_vars] || defaults[:merge_vars]),
         "tags" => args[:tags],
         "subaccount" => args[:subaccount],
         "google_analytics_domains" => args[:google_analytics_domains],

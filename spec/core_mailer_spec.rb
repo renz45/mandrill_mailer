@@ -266,59 +266,35 @@ describe MandrillMailer::CoreMailer do
     end
   end
 
-  describe "protected#format_messages_api_message_data" do
-    it "returns the common data associated with the messages api"
-  end
-
   describe "protected#apply_interceptors!" do
-    it "Applies interceptors to object"
-  #   context "with interceptor" do
-  #     before(:each) do
-  #       @intercepted_params = {
-  #         to: [{ email: 'interceptedto@test.com', name: 'Mr. Interceptor' }],
-  #         tags: ['intercepted-tag'],
-  #         bcc_address: 'interceptedbbc@email.com'
-  #       }
-  #       MandrillMailer.config.interceptor_params = @intercepted_params
-  #     end
-  #
-  #     after do
-  #       MandrillMailer.config.interceptor_params = nil
-  #     end
-  #
-  #     it "should raise an error if interceptor params is not a Hash" do
-  #       MandrillMailer.config.interceptor_params = "error"
-  #       expect { subject }.to raise_error(MandrillMailer::TemplateMailer::InvalidInterceptorParams, "The interceptor_params config must be a Hash")
-  #     end
-  #
-  #     it 'should produce the correct message' do
-  #       expect(subject.message).to eq ({
-  #         "subject" => args[:subject],
-  #         "from_email" => from_email,
-  #         "from_name" => from_name,
-  #         "to" => @intercepted_params[:to],
-  #         "headers" => args[:headers],
-  #         "important" => args[:important],
-  #         "inline_css" => args[:inline_css],
-  #         "track_opens" => args[:track_opens],
-  #         "track_clicks" => args[:track_clicks],
-  #         "auto_text" => true,
-  #         "url_strip_qs" => args[:url_strip_qs],
-  #         "preserve_recipients" => false,
-  #         "bcc_address" => @intercepted_params[:bcc_address],
-  #         "merge_language" => args[:merge_language],
-  #         "global_merge_vars" => [{"name" => var_name, "content" => var_content}],
-  #         "merge_vars" => [{"rcpt" => to_email, "vars" => [{"name" => var_rcpt_name, "content" => var_rcpt_content}]}],
-  #         "tags" => @intercepted_params[:tags],
-  #         "metadata" => args[:metadata],
-  #         "subaccount" => args[:subaccount],
-  #         "google_analytics_domains" => args[:google_analytics_domains],
-  #         "google_analytics_campaign" => args[:google_analytics_campaign],
-  #         "attachments" => [{'type' => attachment_mimetype, 'name' => attachment_filename, 'content' => Base64.encode64(attachment_file)}],
-  #         "images" => [{'type' => image_mimetype, 'name' => image_filename, 'content' => Base64.encode64(image_file)}]
-  #       })
-  #     end
-  #   end
-  # end
+    context "when interceptor config is a proc" do
+      let(:original_email) { "blah@email.com" }
+      let(:interceptor_email) { "intercept@email.com" }
+
+      before do
+        MandrillMailer.config.interceptor = Proc.new {|obj|
+          obj[:to] = interceptor_email
+        }
+      end
+
+      it "Applies interceptors to object" do
+        obj = {to: original_email}
+        expect { mailer.send(:apply_interceptors!, obj)}.to change {obj[:to]}.from(original_email).to(interceptor_email)
+      end
+
+      it "does not raise error" do
+        expect { mailer.send(:apply_interceptors!, {}) }.not_to raise_error
+      end
+    end
+
+    context "when interceptor config is not a proc" do
+      before do
+        MandrillMailer.config.interceptor = "not a proc"
+      end
+
+      it "raises an error" do
+        expect { mailer.send(:apply_interceptors!, {}) }.to raise_error MandrillMailer::CoreMailer::InvalidInterceptorParams
+      end
+    end
   end
 end

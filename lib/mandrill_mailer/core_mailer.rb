@@ -262,11 +262,11 @@ module MandrillMailer
     protected
 
     def apply_interceptors!(obj)
-      unless MandrillMailer.config.interceptor_params.nil?
-        unless MandrillMailer.config.interceptor_params.is_a?(Hash)
-          raise InvalidInterceptorParams.new "The interceptor_params config must be a Hash"
+      unless MandrillMailer.config.interceptor.nil?
+        unless MandrillMailer.config.interceptor.is_a?(Proc)
+          raise InvalidInterceptorParams.new "The interceptor_params config must be a proc"
         end
-        obj.merge!(MandrillMailer.config.interceptor_params.stringify_keys)
+        MandrillMailer.config.interceptor.call(obj)
       end
 
       obj

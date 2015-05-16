@@ -330,11 +330,21 @@ More info: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions#actionmail
 
 ## Using an interceptor
 You can set a mailer interceptor to override any params used when you deliver an e-mail.
+The interceptor is a Proc object that gets called with the mail object being sent
+to the api.
 
-Example:
+Example that adds multiple bcc recipients:
 
 ```ruby
 MandrillMailer.configure do |config|
-  config.interceptor_params = { to: [{ email: "emailtothatwillbeusedinall@emailssent.com", name: "name" }] }
+  config.interceptor = Proc.new {|params|
+
+    params[:to] =  [
+                     params[:to],
+                     { email: "bccEmailThatWillBeUsedInAll@emailsSent1.com", name: "name", type: "bcc" },
+                     { email: "bccEmailThatWillBeUsedInAll@emailsSent2.com", name: "name", type: "bcc" },
+                     { email: "bccEmailThatWillBeUsedInAll@emailsSent3.com", name: "name", type: "bcc" }
+                   ].flatten
+  }
 end
 ```

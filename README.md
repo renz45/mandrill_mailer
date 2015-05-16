@@ -1,7 +1,7 @@
 # Mandrill Mailer
-[![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](rubygems.org/gems/mandrill_mailer)
+[![Build Status](https://travis-ci.org/renz45/mandrill_mailer.svg)](https://travis-ci.org/renz45/mandrill_mailer) [![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](https://rubygems.org/gems/mandrill_mailer)
 [![Code Climate](http://img.shields.io/codeclimate/github/renz45/mandrill_mailer.svg)](https://codeclimate.com/github/renz45/mandrill_mailer)
-[![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer)
+[![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer) [![Inline Documentation](http://inch-ci.org/github/renz45/mandrill_mailer.svg?branch=master)](http://inch-ci.org/github/renz45/mandrill_mailer)
 
 Inherit the MandrillMailer class in your existing Rails mailers to send transactional emails through Mandrill using their template-based emails.
 
@@ -99,6 +99,7 @@ end
 * `#default:`
   * `:from` - set the default from email address for the mailer
   * `:from_name` - set the default from name for the mailer. If not set, defaults to from email address. Setting :from_name in the .mandrill_mail overrides the default.
+  * `:merge_vars` - set some default `merge_vars` that will be sent with every mailer method (in `global_merge_vars` so there's no risk of collision with method-specific `merge_vars`.
 
 * `.mandrill_mail`
    * `:template`(required) - Template slug from within Mandrill (for backwards-compatibility, the template name may also be used but the immutable slug is preferred)

@@ -4,7 +4,9 @@
 # Example usage:
 
 # class InvitationMailer < MandrillMailer::TemplateMailer
-#   default from: 'support@codeschool.com'
+#   default from: 'support@codeschool.com',
+#           from_name: 'Code School',
+#           merge_vars: { 'FOO' => 'Bar' }
 
 #   def invite(invitation)
 #     invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }

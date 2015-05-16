@@ -50,4 +50,23 @@ describe MandrillMailer::TemplateMailer do
       mailer.deliver
     end
   end
+
+  describe "#vars" do
+    subject { mailer.mandrill_mail(args) }
+
+    it "returns the vars" do
+      expect(subject.message["global_merge_vars"].first.values).to include(var_name)
+      expect(subject.message["global_merge_vars"].first.values).to include(var_content)
+    end
+
+    context "when no vars are set" do
+      before do
+        args.delete(:vars)
+      end
+
+      it "doesn't explode" do
+        expect { subject }.not_to raise_error
+      end
+    end
+  end
 end

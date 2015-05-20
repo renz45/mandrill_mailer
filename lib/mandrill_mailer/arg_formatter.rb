@@ -69,7 +69,7 @@ module MandrillMailer
       end
     end
 
-    def self.format_messages_api_message_data(args)
+    def self.format_messages_api_message_data(args, defaults)
       # If a merge_language attribute is given and it's not one of the accepted
       # languages Raise an error
       if args[:merge_language] && !ACCEPTED_MERGE_LANGUAGES.include?(args[:merge_language])
@@ -110,10 +110,6 @@ module MandrillMailer
         "attachments" => attachment_args(args[:attachments]),
         "images" => images_args(args[:images])
       }
-    end
-
-    def self.defaults
-      MandrillMailer::CoreMailer.defaults
     end
   end
 end

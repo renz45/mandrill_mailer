@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.1
+- Correct regression caused in 1.0.0 that broke defaults in mailers - Credit: @etipton 
+
 ## 1.0.0
 - Update manrill_api gem to 1.0.X
 - Change how interceptors work to be more flexible and not overwrite data if needed

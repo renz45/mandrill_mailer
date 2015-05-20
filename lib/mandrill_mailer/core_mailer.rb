@@ -242,7 +242,7 @@ module MandrillMailer
       mandrill_mail_handler(args)
 
       # Construct message hash
-      self.message = MandrillMailer::ArgFormatter.format_messages_api_message_data(args)
+      self.message = MandrillMailer::ArgFormatter.format_messages_api_message_data(args, self.class.defaults)
 
       # Apply any interceptors that may be present
       apply_interceptors!(self.message)

@@ -197,7 +197,7 @@ describe MandrillMailer::ArgFormatter do
 
   describe ".format_messages_api_message_data" do
     it "includes all api values" do
-      result = formatter.format_messages_api_message_data({})
+      result = formatter.format_messages_api_message_data({}, {})
       api_values = ["html", "text", "subject", "from_email", "from_name", "to",
                     "headers", "important", "track_opens", "track_clicks", "auto_text",
                     "auto_html", "inline_css", "url_strip_qs", "preserve_recipients",
@@ -216,20 +216,20 @@ describe MandrillMailer::ArgFormatter do
     context "merge_language exists" do
       context "merge_language is an accepted merge language" do
         it "does not raise an error" do
-          expect { formatter.format_messages_api_message_data({merge_language: "handlebars"}) }.not_to raise_error
+          expect { formatter.format_messages_api_message_data({merge_language: "handlebars"}, {}) }.not_to raise_error
         end
       end
 
       context "merge_language is not an accepted merge language" do
         it "raises an error" do
-          expect { formatter.format_messages_api_message_data({merge_language: "not_valid"}) }.to raise_error(MandrillMailer::CoreMailer::InvalidMergeLanguageError)
+          expect { formatter.format_messages_api_message_data({merge_language: "not_valid"}, {}) }.to raise_error(MandrillMailer::CoreMailer::InvalidMergeLanguageError)
         end
       end
     end
 
     context "merge_language does not exist" do
       it "does not raise an error" do
-        expect { formatter.format_messages_api_message_data({}) }.not_to raise_error
+        expect { formatter.format_messages_api_message_data({}, {}) }.not_to raise_error
       end
     end
   end

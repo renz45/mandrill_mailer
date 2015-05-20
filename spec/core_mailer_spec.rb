@@ -95,6 +95,28 @@ describe MandrillMailer::CoreMailer do
       mailer.mandrill_mail(args)
     end
 
+    it "applies defaults" do
+      default_from = "default name"
+      default_from_email = "default@email.com"
+
+      unique_mailer = Class.new(core_mailer) do
+        default from_name: default_from,
+                from: default_from_email
+      end
+
+      # Create a second mailer to make sure we don't get class var pollution
+      control_mailer = Class.new(core_mailer) do
+        default from_name: "None",
+                from: "invalid@email.com"
+      end
+
+      new_unique_mailer = unique_mailer.new
+      new_unique_mailer.mandrill_mail({})
+
+      expect(new_unique_mailer.message['from_name']).to eq default_from
+      expect(new_unique_mailer.message['from_email']).to eq default_from_email
+    end
+
     describe "vars attribute" do
       it "returns the vars" do
         mailer.mandrill_mail(args)

@@ -146,6 +146,8 @@ end
 
    * `:inline_css` - whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size.
 
+   * `:merge_language` - the merge tag language to use when evaluating merge tags, either 'mailchimp' or 'handlebars'. Default is 'mailchimp'.
+
    * `:attachments` - An array of file objects with the following keys:
      * `content`: The file contents, this will be encoded into a base64 string internally
      * `name`: The name of the file

@@ -98,10 +98,12 @@ describe MandrillMailer::CoreMailer do
     it "applies defaults" do
       default_from = "default name"
       default_from_email = "default@email.com"
+      default_merge_vars = { foo: "bar" }
 
       unique_mailer = Class.new(core_mailer) do
         default from_name: default_from,
-                from: default_from_email
+                from: default_from_email,
+                merge_vars: default_merge_vars
       end
 
       # Create a second mailer to make sure we don't get class var pollution
@@ -115,6 +117,9 @@ describe MandrillMailer::CoreMailer do
 
       expect(new_unique_mailer.message['from_name']).to eq default_from
       expect(new_unique_mailer.message['from_email']).to eq default_from_email
+
+      global_merge_vars = [{ "name" => :foo, "content" => "bar" }]
+      expect(new_unique_mailer.message['global_merge_vars']).to eq global_merge_vars
     end
 
     describe "vars attribute" do

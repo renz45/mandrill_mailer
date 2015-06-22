@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.2
+- Fix a bug where defaults in merge vars were receiving the correct defaults - Credit @kennethkalmer
+
 ## 1.0.1
-- Correct regression caused in 1.0.0 that broke defaults in mailers - Credit: @etipton 
+- Correct regression caused in 1.0.0 that broke defaults in mailers - Credit: @etipton
 
 ## 1.0.0
 ### Changed

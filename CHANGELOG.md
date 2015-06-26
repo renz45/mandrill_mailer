@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.0.2
+## 1.0.3
 - Fix a bug where defaults in merge vars were receiving the correct defaults - Credit @kennethkalmer
 
 ## 1.0.1

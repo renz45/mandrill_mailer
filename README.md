@@ -184,7 +184,7 @@ class InvitationMailer < MandrillMailer::MessageMailer
                   # to: { email: invitation.email, name: 'Honored Guest' },
                   text: "Example text content",
                   html: "<p>Example HTML content</p>",
-                  view_content_link: "http://www.nba.com",
+                  view_content_link: true,
                   vars: {
                     'OWNER_NAME' => invitation.owner_name,
                     'PROJECT_NAME' => invitation.project_name

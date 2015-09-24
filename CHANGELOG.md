@@ -2,24 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.4 - 2015-09-24
+### Added
+- Allow default `view_content_link` on Mailer class.
+
 ## 1.0.3
-- Fix a bug where defaults in merge vars were receiving the correct defaults - Credit @kennethkalmer
+- Fix a bug where defaults in merge vars were receiving the correct defaults (credit @kennethkalmer).
 
 ## 1.0.1
-- Correct regression caused in 1.0.0 that broke defaults in mailers - Credit: @etipton
+- Correct regression caused in 1.0.0 that broke defaults in mailers (credit: @etipton).
 
 ## 1.0.0
 ### Changed
-- Update manrill_api gem to 1.0.X
-- Change how interceptors work to be more flexible and not overwrite data if needed
-- Make both the template and message mailers compatible with all available attributes in the messages api
+- Update manrill_api gem to 1.0.X.
+- Change how interceptors work to be more flexible and not overwrite data if needed.
+- Make both the template and message mailers compatible with all available attributes in the messages API.
 
 ### Removed
 - Deprecated `data` method on Mailer objects, replaced with `message`.
 
 ## 0.6.1
 ### Fixed
-- Correct a regression introduced in 0.6.0 that caused a TypeError exception
+- Correct a regression introduced in 0.6.0 that caused a TypeError exception.
 when no `merge_vars` were provided as arguments to `mandrill_mail`.
 
 ## 0.6.0

@@ -92,7 +92,7 @@ module MandrillMailer
         "inline_css" => boolean(args[:inline_css]),
         "url_strip_qs" => boolean(args.fetch(:url_strip_qs, true)),
         "preserve_recipients" => boolean(args[:preserve_recipients]),
-        "view_content_link" => boolean(args[:view_content_link]),
+        "view_content_link" => boolean(args[:view_content_link] || defaults[:view_content_link]),
         "bcc_address" => args[:bcc],
         "tracking_domain" => args[:tracking_domain],
         "signing_domain" => args[:signing_domain],

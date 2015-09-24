@@ -6,7 +6,8 @@
 # class InvitationMailer < MandrillMailer::TemplateMailer
 #   default from: 'support@codeschool.com',
 #           from_name: 'Code School',
-#           merge_vars: { 'FOO' => 'Bar' }
+#           merge_vars: { 'FOO' => 'Bar' },
+#           view_content_link: true
 
 #   def invite(invitation)
 #     invitees = invitation.invitees.map { |invitee| { email: invitee.email, name: invitee.name } }
@@ -36,7 +37,10 @@
 # end
 
 # #default:
-#   :from - set the default from email address for the mailer
+#   :from               - set the default from email address for the mailer
+#   :from_name          - set the default from name for the mailer
+#   :merge_vars         - set the default merge vars for the mailer
+#   :view_content_link  - set a default view_content_link option for the mailer
 
 # .mandrill_mail
 #   :template(required) - Template name from within Mandrill

@@ -99,11 +99,13 @@ describe MandrillMailer::CoreMailer do
       default_from = "default name"
       default_from_email = "default@email.com"
       default_merge_vars = { foo: "bar" }
+      default_view_content_link = true
 
       unique_mailer = Class.new(core_mailer) do
         default from_name: default_from,
                 from: default_from_email,
-                merge_vars: default_merge_vars
+                merge_vars: default_merge_vars,
+                view_content_link: default_view_content_link
       end
 
       # Create a second mailer to make sure we don't get class var pollution
@@ -117,6 +119,7 @@ describe MandrillMailer::CoreMailer do
 
       expect(new_unique_mailer.message['from_name']).to eq default_from
       expect(new_unique_mailer.message['from_email']).to eq default_from_email
+      expect(new_unique_mailer.message['view_content_link']).to eq default_view_content_link
 
       global_merge_vars = [{ "name" => :foo, "content" => "bar" }]
       expect(new_unique_mailer.message['global_merge_vars']).to eq global_merge_vars
@@ -215,7 +218,7 @@ describe MandrillMailer::CoreMailer do
   end
 
   describe 'defaults' do
-    it 'should not share between different subclasses' do
+    it "doesn't share between different subclasses" do
       klassA = Class.new(core_mailer) do
         default from_name: 'ClassA'
       end
@@ -227,7 +230,7 @@ describe MandrillMailer::CoreMailer do
       expect(klassB.defaults[:from_name]).to eq 'ClassB'
     end
 
-    it 'should use defaults from the parent class' do
+    it 'uses defaults from the parent class' do
       klassA = Class.new(core_mailer) do
         default from_name: 'ClassA'
       end
@@ -237,7 +240,7 @@ describe MandrillMailer::CoreMailer do
       expect(klassB.defaults[:from_name]).to eq 'ClassA'
     end
 
-    it 'should allow overriding defaults from the parent' do
+    it 'allows overriding defaults from the parent' do
       klassA = Class.new(core_mailer) do
         default from_name: 'ClassA'
       end

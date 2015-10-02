@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.0 - 2015-10-02
+### Added
+- Optional RSpec helper (`MandrillMailer::RSpecHelper`) with custom matchers
+to simplify testing mailers like:
+  - `expect(mailer).to be_from("email@example.com")`
+  - `expect(mailer).to have_merge_data('USER_EMAIL' => user.email)`
+  - `expect(mailer).to include_merge_var_content(user.email)`
+  - `expect(mailer).to have_subject("Hello")`
+  - `expect(mailer).to use_template('Example')`
+  - `expect(mailer).to send_email_to('email@example.com')`
+
+
 ## 1.0.4 - 2015-09-24
 ### Added
 - Allow default `view_content_link` on Mailer class.

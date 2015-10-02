@@ -6,7 +6,7 @@
 #
 # let(:user) { FactoryGirl.create(:user) }
 # let(:mailer) { WelcomeMailer.welcome_registered(user) }
-# it 'should have the correct data' do
+# it 'has the correct data' do
 #   expect(mailer).to include_merge_var_content(user.email)
 # end
 #

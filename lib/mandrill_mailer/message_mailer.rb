@@ -96,7 +96,10 @@ require 'mandrill_mailer/core_mailer'
 module MandrillMailer
   class MessageMailer < MandrillMailer::CoreMailer
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
-    def deliver
+    def deliver_now
+      mandrill_api.messages.send(message, async, ip_pool, send_at)
+    end
+    def deliver_later
       mandrill_api.messages.send(message, async, ip_pool, send_at)
     end
   end

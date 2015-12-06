@@ -123,7 +123,7 @@ module MandrillMailer
 
     def deliver_later
       #FIXME
-      deliver_now
+       mandrill_api.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
     end
 
     # Handle template mailer specifics before formating the given args

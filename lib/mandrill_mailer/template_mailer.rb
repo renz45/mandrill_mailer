@@ -117,8 +117,13 @@ module MandrillMailer
     attr_accessor :template_content
 
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
-    def deliver
+    def deliver_now
       mandrill_api.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
+    end
+
+    def deliver_later
+      #FIXME
+      deliver_now
     end
 
     # Handle template mailer specifics before formating the given args

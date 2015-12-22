@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.2.0 - 2015-12-22
+### Added
+- Support for for deliver_later and deliver_now using ActiveJob. via @BenRuns
+
+
 ## 1.1.0 - 2015-10-02
 ### Added
 - Optional RSpec helper (`MandrillMailer::RSpecHelper`) with custom matchers

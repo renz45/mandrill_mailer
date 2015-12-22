@@ -106,6 +106,7 @@
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
 require 'mandrill_mailer/core_mailer'
 require 'mandrill_mailer/arg_formatter'
+require 'mandrill_mailer/mandrill_template_later'
 
 module MandrillMailer
   class TemplateMailer < MandrillMailer::CoreMailer
@@ -122,8 +123,7 @@ module MandrillMailer
     end
 
     def deliver_later
-      #FIXME
-       mandrill_api.messages.send_template(template_name, template_content, message, async, ip_pool, send_at)
+      MandrillMailer::MandrillTemplateJob.perform_later(template_name, template_content, message, async, ip_pool, send_at)
     end
 
     # Handle template mailer specifics before formating the given args

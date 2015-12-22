@@ -92,15 +92,16 @@
 
 # :important - whether or not this message is important, and should be delivered ahead of non-important messages
 require 'mandrill_mailer/core_mailer'
-
+require 'mandrill_mailer/mandrill_message_later'
 module MandrillMailer
   class MessageMailer < MandrillMailer::CoreMailer
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
     def deliver_now
       mandrill_api.messages.send(message, async, ip_pool, send_at)
     end
+
     def deliver_later
-      mandrill_api.messages.send(message, async, ip_pool, send_at)
+      MandrillMessageJob.perform_later(message, async, ip_pool, send_at)
     end
   end
 end

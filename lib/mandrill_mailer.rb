@@ -1,4 +1,5 @@
 require 'action_view'
+require 'active_job'
 require 'mandrill_mailer/railtie'
 require 'mandrill_mailer/mock'
 require 'mandrill_mailer/template_mailer'

@@ -26,6 +26,10 @@ module MandrillMailer
   end
 
   class TemplateMailer
+    def deliver
+      deliver_now
+    end
+    
     def deliver_now
       MandrillMailer::Mock.new({
         :template_name    => template_name,
@@ -53,6 +57,9 @@ module MandrillMailer
   end
 
   class MessageMailer
+    def deliver
+      deliver_now
+    end
     def deliver_now
       MandrillMailer::Mock.new({
         :message          => message,

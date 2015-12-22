@@ -14,14 +14,20 @@ describe MandrillMailer::MessageMailer do
     let(:send_at) { double(:send_at) }
     let(:message) { double(:message) }
 
-    it "calls the messages api with #send" do
+    before do 
       mailer.async = async
       mailer.ip_pool = ip_pool
       mailer.send_at = send_at
       mailer.message = message
+    end
 
+    it "calls the messages api with #send" do
       expect_any_instance_of(Mandrill::Messages).to receive(:send).with(message, async, ip_pool, send_at)
       mailer.deliver_now
+    end
+    it "has an alias deliver" do
+      expect_any_instance_of(Mandrill::Messages).to receive(:send).with(message, async, ip_pool, send_at)
+      mailer.deliver
     end
   end
   describe "#deliver_later" do

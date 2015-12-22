@@ -1,7 +1,7 @@
 require 'mandrill_mailer/template_mailer'
 module MandrillMailer
 	class MandrillTemplateJob < ActiveJob::Base
-	  queue_as :default
+	  queue_as { MandrillMailer.config.deliver_later_queue_name }
 
 	  def perform(template_name, template_content, message, async, ip_pool, send_at)
 	  	mailer = MandrillMailer::TemplateMailer.new

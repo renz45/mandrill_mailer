@@ -39,6 +39,7 @@ ActionMailer::Base.delivery_method = :smtp
 
 MandrillMailer.configure do |config|
   config.api_key = ENV['MANDRILL_API_KEY']
+  config.config.deliver_later_queue_name = :default
 end
 ```
 
@@ -216,7 +217,9 @@ end
 
 You can send the email by using the familiar syntax:
 
-`InvitationMailer.invite(invitation).deliver`
+`InvitationMailer.invite(invitation).deliver_now`
+`InvitationMailer.invite(invitation).deliver_later(wait: 1.hour)`
+For deliver_later, Active Job will need to be configured 
 
 ## Creating a test method
 When switching over to Mandrill for transactional emails we found that it was hard to setup a mailer in the console to send test emails easily (those darn designers), but really, you don't want to have to setup test objects everytime you want to send a test email. You can set up a testing 'mock' once and then call the `.test` method to send the test email.

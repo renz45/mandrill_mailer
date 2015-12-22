@@ -38,16 +38,23 @@ describe MandrillMailer::TemplateMailer do
     let(:template_name) { double(:template_name) }
     let(:template_content) { double(:template_content) }
 
-    it "calls the messages api with #send_template" do
+    before do
       mailer.async = async
       mailer.ip_pool = ip_pool
       mailer.send_at = send_at
       mailer.message = message
       mailer.template_content = template_content
       mailer.template_name = template_name
+    end
 
+    it "calls the messages api with #send_template" do
       expect_any_instance_of(Mandrill::Messages).to receive(:send_template).with(template_name, template_content, message, async, ip_pool, send_at)
       mailer.deliver_now
+    end
+
+    it "has an alias deliver" do
+      expect_any_instance_of(Mandrill::Messages).to receive(:send_template).with(template_name, template_content, message, async, ip_pool, send_at)
+      mailer.deliver
     end
   end
   describe "#deliver_later" do

@@ -96,12 +96,16 @@ require 'mandrill_mailer/mandrill_message_later'
 module MandrillMailer
   class MessageMailer < MandrillMailer::CoreMailer
     # Public: Triggers the stored Mandrill params to be sent to the Mandrill api
+    def deliver
+      deliver_now
+    end
+
     def deliver_now
       mandrill_api.messages.send(message, async, ip_pool, send_at)
     end
 
-    def deliver_later
-      MandrillMessageJob.perform_later(message, async, ip_pool, send_at)
+    def deliver_later(options={})
+      MandrillMailer::MandrillMessageJob.set(options).perform_later(message, async, ip_pool, send_at)
     end
   end
 end

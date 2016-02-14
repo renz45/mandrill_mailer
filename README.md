@@ -108,11 +108,12 @@ end
 
    * `:subject` - Subject of the email. If no subject supplied, it will fall back to the template default subject from within Mandrill
 
-   * `:to`(required) - Accepts an email String, a Hash with :name and :email keys, or an Array of Hashes with :name and :email keys
+   * `:to`(required) - Accepts an email String, a Hash with :name and :email keys, or an Array of Hashes with :name, :email, and :type keys
       - examples:
         1. `'example@domain.com'`
         2. `{ email: 'someone@email.com', name: 'Bob Bertly' }`
         3. `[{ email: 'someone@email.com', name: 'Bob Bertly' }, { email: 'other@email.com', name: 'Claire Nayo' }]`
+        4. `[{ email: 'someone@email.com', name: 'Bob Bertly', type: 'to'}, { email: 'secret_recipient1@email.com', name: 'Secret Recipient One', type: 'bcc'}, { email: 'secret_recipient2@email.com', name: 'Secret Recipient Two', type: 'bcc'}]`
 
    * `:vars` - A Hash of merge tags made available to the email. Use them in the
      email by wrapping them in `*||*`. For example `{'OWNER_NAME' => 'Suzy'}` is used by doing: `*|OWNER_NAME|*` in the email template within Mandrill

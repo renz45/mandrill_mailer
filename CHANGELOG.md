@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.3.0 - 2016-3-02
+### Added
+- Fixed an issue where deliver_later functionality was not working as intended when inheriting from the mailer classes. via @eric1234 
+
 ## 1.2.0 - 2015-12-22
 ### Added
 - Support for for deliver_later and deliver_now using ActiveJob. via @BenRuns

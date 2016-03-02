@@ -3,7 +3,7 @@ module MandrillMailer
   class MandrillMessageJob < ActiveJob::Base
     queue_as { MandrillMailer.config.deliver_later_queue_name }
 
-    def perform(mailer, message, async, ip_pool, send_at)
+    def perform(message, async, ip_pool, send_at, mailer='MandrillMailer::MessageMailer')
       mailer = mailer.constantize.new
       mailer.message = message
       mailer.async = async

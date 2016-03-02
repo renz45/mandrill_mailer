@@ -105,7 +105,7 @@ module MandrillMailer
     end
 
     def deliver_later(options={})
-      MandrillMailer::MandrillMessageJob.set(options).perform_later(self.class.name, message, async, ip_pool, send_at)
+      MandrillMailer::MandrillMessageJob.set(options).perform_later(message, async, ip_pool, send_at, self.class.name)
     end
   end
 end

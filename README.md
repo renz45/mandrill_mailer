@@ -336,6 +336,27 @@ Or depending on how up to date things are, try adding the following to `config/i
 This should enable you to use this mailer the same way you use ActionMailer.
 More info: https://github.com/mperham/sidekiq/wiki/Delayed-Extensions#actionmailer
 
+## Using Resque
+
+Create a job:
+```ruby
+class SendUserMailJob
+  def initialize(user_id)
+    @user_id = user_id
+  end
+
+  def work
+    user = User.find(@user_id)
+    UserMailer.send_user_email(user).deliver
+  end
+end
+```
+
+Send your job to Resque:
+```ruby
+resque = Resque.new
+resque << SendUserMailJob.new(<user id>)
+```
 
 ## Using an interceptor
 You can set a mailer interceptor to override any params used when you deliver an e-mail.

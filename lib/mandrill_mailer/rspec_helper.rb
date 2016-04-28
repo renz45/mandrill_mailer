@@ -5,7 +5,7 @@
 #
 # RSpec.configure do |config|
 #   # ...
-#   require "mandrill_mailer/rspec_helpers"
+#   require "mandrill_mailer/rspec_helper"
 #   config.include MandrillMailer::RSpecHelper
 # end
 #

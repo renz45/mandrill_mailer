@@ -2,9 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.3.0 - 2016-3-02
+## 1.4.0 - 2016-04-28
+### Changed
+- Update deprecated RSpec failure methods in RSpec helpers.
+
+## 1.3.0 - 2016-03-02
 ### Added
-- Fixed an issue where deliver_later functionality was not working as intended when inheriting from the mailer classes. via @eric1234 
+- Fixed an issue where deliver_later functionality was not working as intended when inheriting from the mailer classes. via @eric1234
 
 ## 1.2.0 - 2015-12-22
 ### Added

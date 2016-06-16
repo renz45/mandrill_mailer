@@ -371,9 +371,9 @@ MandrillMailer.configure do |config|
 
     params[:to] =  [
       params[:to],
-      { email: "bccEmailThatWillBeUsedInAll@emailsSent1.com", name: "name", type: "bcc" },
-      { email: "bccEmailThatWillBeUsedInAll@emailsSent2.com", name: "name", type: "bcc" },
-      { email: "bccEmailThatWillBeUsedInAll@emailsSent3.com", name: "name", type: "bcc" }
+      { "email" => "bccEmailThatWillBeUsedInAll@emailsSent1.com", "name" => "name", "type" => "bcc" },
+      { "email" => "bccEmailThatWillBeUsedInAll@emailsSent2.com", "name" => "name", "type" => "bcc" },
+      { "email" => "bccEmailThatWillBeUsedInAll@emailsSent3.com", "name" => "name", "type" => "bcc" }
     ].flatten
   }
 end

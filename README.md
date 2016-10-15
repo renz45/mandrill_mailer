@@ -284,7 +284,7 @@ before :each { MandrillMailer.deliveries.clear }
 ```
 
 ## Using Delayed Job
-The typical Delayed Job mailer syntax won't work with this as of now. Either create a custom job or que the mailer as you would que a method. Take a look at the following examples:
+The typical Delayed Job mailer syntax won't work with this as of now. Either create a custom job or queue the mailer as you would queue a method. Take a look at the following examples:
 
 ```ruby
 def send_hallpass_expired_mailer

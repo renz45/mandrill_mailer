@@ -270,7 +270,7 @@ require 'mandrill_mailer/offline'
 And then if you wish you can look at the contents of `MandrillMailer.deliveries` to see whether an email was queued up by your test:
 
 ```ruby
-email = MandrillMailer::deliveries.detect { |mail|
+email = MandrillMailer.deliveries.detect { |mail|
   mail.template_name == 'my-template' &&
   mail.message['to'].any? { |to| to[:email] == 'my@email.com' }
 }

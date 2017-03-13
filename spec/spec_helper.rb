@@ -9,6 +9,7 @@ require 'pry'
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 ActiveJob::Base.queue_adapter = :inline
+ActiveJob::Base.logger.level = Logger::WARN
 
 RSpec.configure do |config|
   config.mock_with :rspec

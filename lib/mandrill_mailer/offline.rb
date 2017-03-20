@@ -26,23 +26,7 @@ module MandrillMailer
   end
 
   class TemplateMailer
-    def deliver
-      deliver_now
-    end
-    
     def deliver_now
-      MandrillMailer::Mock.new({
-        :template_name    => template_name,
-        :template_content => template_content,
-        :message          => message,
-        :async            => async,
-        :ip_pool          => ip_pool,
-        :send_at          => send_at
-      }).tap do |mock|
-         MandrillMailer.deliveries << mock
-      end
-    end
-    def deliver_later
       MandrillMailer::Mock.new({
         :template_name    => template_name,
         :template_content => template_content,
@@ -57,20 +41,7 @@ module MandrillMailer
   end
 
   class MessageMailer
-    def deliver
-      deliver_now
-    end
     def deliver_now
-      MandrillMailer::Mock.new({
-        :message          => message,
-        :async            => async,
-        :ip_pool          => ip_pool,
-        :send_at          => send_at
-      }).tap do |mock|
-         MandrillMailer.deliveries << mock
-      end
-    end
-    def deliver_later
       MandrillMailer::Mock.new({
         :message          => message,
         :async            => async,

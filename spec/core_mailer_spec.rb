@@ -179,7 +179,7 @@ describe MandrillMailer::CoreMailer do
 
     context 'Rails is not defined' do
       it 'should raise an exception' do
-        expect{subject}.to raise_error
+        expect{subject}.to raise_error NoMethodError
       end
     end
   end
@@ -212,7 +212,7 @@ describe MandrillMailer::CoreMailer do
 
     context 'Rails does not exist' do
       it 'should raise exception' do
-        expect{ subject }.to raise_error
+        expect{ subject }.to raise_error NoMethodError
       end
     end
   end

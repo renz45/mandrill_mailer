@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.0 - 2017-03-20
+- Update offline adapter for testing to be more compatible with Rails 5 via @eric1234
+
 ## 1.4.0 - 2016-04-28
 ### Changed
 - Update deprecated RSpec failure methods in RSpec helpers.

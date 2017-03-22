@@ -153,11 +153,13 @@ end
 
    * `:attachments` - An array of file objects with the following keys:
      * `content`: The file contents, this will be encoded into a base64 string internally
+     * `encoded_content` (optional): File content already encoded into base64 string. Overrides `content`
      * `name`: The name of the file
      * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc
 
    * `:images` - An array of embedded images to add to the message:
      * `content`: The file contents, this will be encoded into a base64 string internally
+     * `encoded_content` (optional): File content already encoded into base64 string. Overrides `content`
      * `name`: The name of the file
      * `type`: This is the mimetype of the file. Ex. png = image/png, pdf = application/pdf, txt = text/plain etc etc etc
 

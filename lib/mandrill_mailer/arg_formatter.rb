@@ -11,7 +11,9 @@ module MandrillMailer
         type = attachment[:mimetype] || attachment[:type]
         name = attachment[:filename] || attachment[:name]
         file = attachment[:file] || attachment[:content]
-        {"type" => type, "name" => name, "content" => Base64.encode64(file)}
+        encoded_file = attachment[:encoded_file] || attachment[:encoded_content]
+        next {"type" => type, "name" => name, "content" => encoded_file} if encoded_file
+        next {"type" => type, "name" => name, "content" => Base64.encode64(file)}
       end
     end
 

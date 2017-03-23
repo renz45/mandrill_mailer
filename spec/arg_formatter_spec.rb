@@ -10,12 +10,26 @@ describe MandrillMailer::ArgFormatter do
       content: "testing some test test file"
     }
   end
+  let(:encoded_api_args) do
+    {
+      type: "some/type",
+      name: 'test',
+      encoded_content: Base64.encode64("testing some test test file")
+    }
+  end
 
   let(:file_args) do
     {
       mimetype: "some/type",
       filename: 'test',
       file: "testing some test test file"
+    }
+  end
+  let(:encoded_file_args) do
+    {
+      mimetype: "some/type",
+      filename: 'test',
+      encoded_file: Base64.encode64("testing some test test file")
     }
   end
 
@@ -35,6 +49,16 @@ describe MandrillMailer::ArgFormatter do
           'content' => Base64.encode64("testing some test test file")
         }])
       end
+
+      describe "passing an encoded string" do
+        it "formats the correct attachment data" do
+          expect(formatter.attachment_args([encoded_file_args])).to eq([{
+            'type' => "some/type",
+            'name' => 'test',
+            'content' => Base64.encode64("testing some test test file")
+          }])
+        end
+      end
     end
 
     context "with api syntax" do
@@ -44,6 +68,16 @@ describe MandrillMailer::ArgFormatter do
           'name' => 'test',
           'content' => Base64.encode64("testing some test test file")
         }])
+      end
+
+      describe "passing an encoded string" do
+        it "formats the correct attachment data" do
+          expect(formatter.attachment_args([encoded_api_args])).to eq([{
+            'type' => "some/type",
+            'name' => 'test',
+            'content' => Base64.encode64("testing some test test file")
+          }])
+        end
       end
     end
   end

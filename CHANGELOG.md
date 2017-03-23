@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.6.0 - 2017-03-23
+- Add support for attaching unencoded content via @brunomperes
+
 ## 1.5.0 - 2017-03-20
 - Update offline adapter for testing to be more compatible with Rails 5 via @eric1234
 

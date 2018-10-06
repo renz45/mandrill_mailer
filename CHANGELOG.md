@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.7.0 - 2018-10-06
+- Switch to mandrillus fork of the mandrill-api gem to allow for newer
+json gem support
+
 ## 1.6.0 - 2017-03-23
 - Add support for attaching unencoded content via @brunomperes
 

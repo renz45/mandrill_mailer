@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = MandrillMailer::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Adam Rensel"]
-  s.email       = ["adamrensel@codeschool.com"]
+  s.email       = ["adamrensel@gmail.com"]
   s.homepage    = "https://github.com/renz45/mandrill_mailer"
   s.summary     = %q{Transactional Mailer for Mandrill}
   s.description = %q{Transactional Mailer for Mandrill}
@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activesupport'
   s.add_dependency 'actionpack'
   s.add_dependency 'activejob'
-  s.add_runtime_dependency 'mandrill-api', '~> 1.0.9'
+  s.add_runtime_dependency 'mandrillus', '~> 2.0.0'
 
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rspec'

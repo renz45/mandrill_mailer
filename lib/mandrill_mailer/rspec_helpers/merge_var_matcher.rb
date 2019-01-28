@@ -30,7 +30,7 @@ RSpec::Matchers.define :have_merge_data do |expected_data|
   MESSAGE
   end
 
-  failure_message do |actual|
+  failure_message_when_negated do |actual|
     <<-MESSAGE.strip_heredoc
     Expected merge variables: #{merge_vars_from(actual).inspect} to not include data: #{expected_data.inspect} but it does.
   MESSAGE

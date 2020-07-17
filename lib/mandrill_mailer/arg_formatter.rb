@@ -25,7 +25,7 @@ module MandrillMailer
     # convert a normal hash into the format mandrill needs
     def self.mandrill_args(args)
       return [] unless args
-      args.map do |k,v|
+      args.stringify_keys.map do |k,v|
         {'name' => k, 'content' => v}
       end
     end

@@ -121,7 +121,7 @@ describe MandrillMailer::CoreMailer do
       expect(new_unique_mailer.message['from_email']).to eq default_from_email
       expect(new_unique_mailer.message['view_content_link']).to eq default_view_content_link
 
-      global_merge_vars = [{ "name" => :foo, "content" => "bar" }]
+      global_merge_vars = [{ "name" => "foo", "content" => "bar" }]
       expect(new_unique_mailer.message['global_merge_vars']).to eq global_merge_vars
     end
 

@@ -292,9 +292,9 @@ module MandrillMailer
     # Makes this class act as a singleton without it actually being a singleton
     # This keeps the syntax the same as the orginal mailers so we can swap quickly if something
     # goes wrong.
-    def self.method_missing(method, *args)
+    def self.method_missing(method, *args, **kwargs)
       return super unless respond_to?(method)
-      new.method(method).call(*args)
+      new.method(method).call(*args, **kwargs)
     end
 
     def self.respond_to?(method, include_private = false)

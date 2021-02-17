@@ -1,6 +1,6 @@
 # Mandrill Mailer
 [![Build Status](https://img.shields.io/github/workflow/status/renz45/mandrill_mailer/build.svg)](https://github.com/renz45/mandrill_mailer/actions/workflows/tests.yml) [![Gem Version](http://img.shields.io/gem/v/mandrill_mailer.svg)](https://rubygems.org/gems/mandrill_mailer)
-[![Dependencies](http://img.shields.io/gemnasium/renz45/mandrill_mailer.svg)](https://gemnasium.com/renz45/mandrill_mailer) [![Inline Documentation](http://inch-ci.org/github/renz45/mandrill_mailer.svg?branch=master)](http://inch-ci.org/github/renz45/mandrill_mailer)
+[![Inline Documentation](http://inch-ci.org/github/renz45/mandrill_mailer.svg?branch=master)](http://inch-ci.org/github/renz45/mandrill_mailer)
 
 Inherit the MandrillMailer class in your existing Rails mailers to send transactional emails through Mandrill using their template-based emails.
 

@@ -290,11 +290,16 @@ module MandrillMailer
     end
 
     # Makes this class act as a singleton without it actually being a singleton
-    # This keeps the syntax the same as the orginal mailers so we can swap quickly if something
+    # This keeps the syntax the same as the original mailers so we can swap quickly if something
     # goes wrong.
-    def self.method_missing(method, *args)
-      return super unless respond_to?(method)
-      new.method(method).call(*args)
+
+    class << self
+      def method_missing(method, *args, &block)
+        return super unless respond_to?(method)
+        new.method(method).call(*args, &block)
+      end
+
+      ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
     end
 
     def self.respond_to?(method, include_private = false)

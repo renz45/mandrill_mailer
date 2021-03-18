@@ -3,7 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 # Unreleased
-- Allow symbols in vars [#140](https://github.com/renz45/mandrill_mailer/pull/140) (credit: @raphaelpra)
+
+## 1.8.0 - 2021-03-18
+- Support Ruby 3.0.0 [#142](https://github.com/renz45/mandrill_mailer/pull/142) (via @berkos)
+- Allow symbols in vars [#140](https://github.com/renz45/mandrill_mailer/pull/140) (via @raphaelpra)
 
 ## 1.7.1 - 2018-10-06
 - Fix rspec matcher: https://github.com/renz45/mandrill_mailer/pull/136

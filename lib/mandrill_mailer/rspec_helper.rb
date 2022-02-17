@@ -37,5 +37,6 @@ module MandrillMailer
     require 'mandrill_mailer/rspec_helpers/subject_matcher'
     require 'mandrill_mailer/rspec_helpers/template_matcher'
     require 'mandrill_mailer/rspec_helpers/to_email_matcher'
+    require 'mandrill_mailer/rspec_helpers/mandrill_mailer_contains'
   end
 end

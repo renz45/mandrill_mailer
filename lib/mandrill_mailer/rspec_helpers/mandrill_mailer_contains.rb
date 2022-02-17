@@ -34,9 +34,6 @@
 #  to: 'joe@doe.example',
 #  global_variables: {
 #    'FNAME' => 'John',
-#    'EVENT_TITLE' => 'Super Series',
-#    'EVENT_HREF' => event_url(event, auth_token: auth_token, host: host),
-#    'EVENTS_URL' => city_url(event.city, auth_token: auth_token, host: host),
 #    'START_TIME' => '10:45am EST / 7:45am PST',
 #    'VENUE' => 'Midtown Venue',
 #    'START_DATE' => 'Wednesday, 01/10/2018',
@@ -44,7 +41,7 @@
 #    'MEMBER_FULL_NAME' => 'John Gates',
 #    'MEMBER_EMAIL' => 'joe@doe.example'
 #  }
-#)
+# )
 #
 RSpec::Matchers.define :mandrill_email do |expected|
   class MailerContains < RSpec::Matchers::BuiltIn::BaseMatcher

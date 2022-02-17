@@ -379,3 +379,14 @@ MandrillMailer.configure do |config|
   }
 end
 ```
+
+## Rspec matcher
+
+# In spec/spec_helper.rb:
+```ruby
+  RSpec.configure do |config|
+    # ...
+    require "mandrill_mailer/rspec_helper"
+    config.include MandrillMailer::RSpecHelper
+  end
+```
